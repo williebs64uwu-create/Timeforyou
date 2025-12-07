@@ -418,164 +418,132 @@
             50% { transform: scale(1.15); box-shadow: 0 12px 50px rgba(16, 185, 129, 0.8); }
         }
 
-        /* VOICE MODAL */
-        .voice-modal {
-            text-align: center;
-        }
-
-        .voice-wave {
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            margin: 30px 0;
-        }
-
-        .voice-bar {
-            width: 4px;
-            height: 20px;
-            background: var(--primary);
-            border-radius: 2px;
-            animation: wave 1s ease-in-out infinite;
-        }
-
-        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
-        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
-        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
-        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes wave {
-            0%, 100% { height: 20px; }
-            50% { height: 60px; }
-        }
-
-        .voice-text {
-            font-size: 18px;
-            min-height: 60px;
-            padding: 20px;
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            margin: 20px 0;
-        }
-
-        /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            padding: 16px 28px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 30px var(--shadow);
-            z-index: 1001;
-            animation: slideUp 0.3s ease;
-            backdrop-filter: blur(20px);
-        }
-
-        /* SETTINGS */
-        .settings-grid {
+        /* CALENDAR MONTH */
+        .calendar-month {
             display: grid;
-            gap: 20px;
-        }
-
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: var(--bg-tertiary);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .toggle-switch {
-            width: 50px;
-            height: 26px;
-            background: var(--border);
-            border-radius: 13px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .toggle-switch.active {
-            background: var(--primary);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 26px;
-        }
-
-        /* SHARE LINK */
-        .share-link-box {
-            background: var(--bg-tertiary);
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px dashed var(--border);
-            text-align: center;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
             margin-top: 20px;
         }
 
-        .share-link {
-            font-family: monospace;
-            font-size: 14px;
-            color: var(--primary);
-            word-break: break-all;
-            padding: 10px;
-            background: var(--glass);
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .menu-toggle {
-                display: block !important;
-            }
-        }
-
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 101;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            width: 48px;
-            height: 48px;
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--bg-tertiary);
             border-radius: 12px;
+            padding: 10px;
+            border: 1px solid var(--border);
             cursor: pointer;
-            font-size: 20px;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-day:hover {
+            transform: translateY(-2px);
             box-shadow: 0 4px 15px var(--shadow);
         }
 
-        /* CALENDAR */
+        .calendar-day.today {
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .day-tasks {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .task-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chart-container {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .chart-label {
+            width: 100px;
+            font-size: 13px;
+        }
+
+        .chart-bar-fill {
+            flex: 1;
+            height: 30px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* WEEK GRID */
         .week-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -641,36 +609,6 @@
             opacity: 0.5;
         }
 
-        /* STATS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .stat-value {
-            font-size: 42px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -678,6 +616,108 @@
             font-size: 12px;
             font-weight: 600;
             margin-left: auto;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px 28px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px var(--shadow);
+            z-index: 1001;
+            animation: slideUp 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        /* SETTINGS */
+        .settings-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: var(--border);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block !important;
+            }
+            .calendar-month {
+                gap: 5px;
+            }
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            color: var(--text-primary);
         }
 
         /* SCROLLBAR */
@@ -697,6 +737,34 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-dark);
+        }
+
+        /* NOTIFICATION BANNER */
+        .notification-banner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 400px;
+            box-shadow: 0 8px 30px var(--shadow);
+            z-index: 1002;
+            animation: slideInRight 0.5s ease;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(500px); }
+            to { transform: translateX(0); }
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -814,7 +882,6 @@
                         <option value="30">30 minutos antes</option>
                         <option value="60">1 hora antes</option>
                         <option value="1440">1 día antes</option>
-                        <option value="10080">1 semana antes</option>
                     </select>
                     <div id="remindersContainer" style="margin-top: 10px;"></div>
                 </div>
@@ -824,40 +891,6 @@
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">✕ Cancelar</button>
                 </div>
             </form>
-        </div>
-    </div>
-    
-    <!-- MODAL DE VOZ -->
-    <div class="modal" id="voiceModal">
-        <div class="modal-content voice-modal">
-            <div class="modal-header">🎤 Comando de Voz</div>
-            
-            <div class="voice-wave" id="voiceWave">
-                <div class="voice-bar"></div>
-                <div class="voice-bar"></div>
-                <div class="voice-bar"></div>
-                <div class="voice-bar"></div>
-                <div class="voice-bar"></div>
-            </div>
-            
-            <div class="voice-text" id="voiceText">Presiona el botón y habla...</div>
-            
-            <div style="margin: 30px 0;">
-                <button class="btn btn-primary" id="voiceStartBtn" onclick="startVoiceRecognition()">
-                    🎤 Comenzar
-                </button>
-            </div>
-            
-            <div style="text-align: left; background: var(--bg-tertiary); padding: 20px; border-radius: 12px; font-size: 14px;">
-                <strong>💡 Ejemplos de comandos:</strong><br><br>
-                📅 "Reunión mañana 3pm alta prioridad"<br>
-                📚 "Estudiar para examen viernes 10am"<br>
-                🎬 "Grabar video YouTube lunes"<br>
-                🎵 "Sesión de grabación jueves 8pm"<br>
-                💪 "Gym hoy 6 de la mañana"
-            </div>
-            
-            <button class="btn btn-secondary" onclick="closeModal()" style="margin-top: 20px;">Cerrar</button>
         </div>
     </div>
     
@@ -874,6 +907,7 @@
         let editingTaskId = null;
         let selectedPriority = 'none';
         let reminders = [];
+        let notificationTimers = [];
         
         const TODAY = new Date();
         TODAY.setHours(0, 0, 0, 0);
@@ -885,12 +919,12 @@
             render();
             requestNotificationPermission();
             applyTheme();
-            checkReminders();
+            startReminderChecker();
             
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('service-worker.js')
-                    .then(() => console.log('Service Worker registrado'))
-                    .catch(err => console.log('Error:', err));
+                    .then(() => console.log('✅ Service Worker registrado'))
+                    .catch(err => console.log('❌ Error SW:', err));
             }
         };
         
@@ -913,22 +947,137 @@
             document.getElementById('taskDate').value = `${yyyy}-${mm}-${dd}`;
         }
         
+        // SISTEMA DE NOTIFICACIONES MEJORADO
         function requestNotificationPermission() {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
+            if ('Notification' in window) {
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            showToast('✅ Notificaciones activadas');
+                            showTestNotification();
+                        } else {
+                            showToast('⚠️ Activa las notificaciones para recibir alertas');
+                        }
+                    });
+                } else if (Notification.permission === 'granted') {
+                    showTestNotification();
+                }
             }
         }
         
-        function showNotification(title, body) {
+        function showTestNotification() {
+            setTimeout(() => {
+                showNotification('TickTick Ultra PRO', '¡Notificaciones funcionando correctamente! 🎉');
+            }, 2000);
+        }
+        
+        function showNotification(title, body, icon = '✓') {
             if (settings.notifications && Notification.permission === 'granted') {
-                new Notification(title, { body, icon: '✓', requireInteraction: true });
+                const notification = new Notification(title, { 
+                    body, 
+                    icon: icon,
+                    badge: icon,
+                    requireInteraction: true,
+                    silent: !settings.sound,
+                    tag: 'ticktick-' + Date.now()
+                });
+                
                 if (settings.sound) playSound();
+                
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+                
+                // Mostrar también banner interno
+                showNotificationBanner(title, body);
+                
+                return notification;
+            } else if (Notification.permission === 'denied') {
+                // Si están bloqueadas, mostrar solo banner interno
+                showNotificationBanner(title, body);
             }
+        }
+        
+        function showNotificationBanner(title, body) {
+            const banner = document.createElement('div');
+            banner.className = 'notification-banner';
+            banner.innerHTML = `
+                <div class="notification-title">🔔 ${title}</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">${body}</div>
+            `;
+            document.body.appendChild(banner);
+            
+            setTimeout(() => {
+                banner.style.animation = 'slideInRight 0.5s ease reverse';
+                setTimeout(() => banner.remove(), 500);
+            }, 5000);
         }
         
         function playSound() {
             const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzSJ0/LTgjMGHm7A7+OZURE=');
             audio.play().catch(() => {});
+        }
+        
+        // SISTEMA DE RECORDATORIOS MEJORADO
+        function startReminderChecker() {
+            // Limpiar timers anteriores
+            notificationTimers.forEach(timer => clearTimeout(timer));
+            notificationTimers = [];
+            
+            // Chequear cada minuto
+            setInterval(checkAllReminders, 60000);
+            
+            // Chequear inmediatamente al cargar
+            checkAllReminders();
+        }
+        
+        function checkAllReminders() {
+            const now = new Date();
+            
+            tasks.forEach(task => {
+                if (task.completed || !task.date || !task.time || !task.reminders) return;
+                
+                const taskDateTime = new Date(`${task.date}T${task.time}`);
+                
+                task.reminders.forEach(reminder => {
+                    const reminderTime = new Date(taskDateTime.getTime() - (reminder.minutes * 60000));
+                    const diffMs = reminderTime - now;
+                    const diffMinutes = Math.floor(diffMs / 60000);
+                    
+                    // Si falta exactamente el tiempo del recordatorio (±1 minuto)
+                    if (diffMinutes >= 0 && diffMinutes <= 1) {
+                        showNotification(
+                            `🔔 Recordatorio: ${task.title}`,
+                            `En ${reminder.label.replace(' antes', '')}`
+                        );
+                    }
+                });
+            });
+        }
+        
+        function scheduleReminders(task) {
+            if (!task.date || !task.time || !task.reminders || task.reminders.length === 0) return;
+            
+            const taskDateTime = new Date(`${task.date}T${task.time}`);
+            
+            task.reminders.forEach(reminder => {
+                const reminderTime = new Date(taskDateTime.getTime() - (reminder.minutes * 60000));
+                const now = new Date();
+                
+                if (reminderTime > now) {
+                    const timeUntil = reminderTime.getTime() - now.getTime();
+                    
+                    const timer = setTimeout(() => {
+                        showNotification(
+                            `🔔 Recordatorio: ${task.title}`,
+                            reminder.label
+                        );
+                    }, timeUntil);
+                    
+                    notificationTimers.push(timer);
+                }
+            });
         }
         
         function applyTheme() {
@@ -987,14 +1136,14 @@
                 case 'week':
                     renderWeek(content);
                     break;
-                case 'settings':
-                    renderSettings(content);
-                    break;
-                case 'share':
-                    renderShare(content);
+                case 'month':
+                    renderMonth(content);
                     break;
                 case 'stats':
                     renderStats(content);
+                    break;
+                case 'settings':
+                    renderSettings(content);
                     break;
                 default:
                     renderInbox(content);
@@ -1066,6 +1215,160 @@
             `;
         }
         
+        function renderMonth(content) {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+            
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            let html = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <button class="btn btn-secondary" onclick="changeMonth(-1)">← Anterior</button>
+                    <h2 style="font-size: 28px; font-weight: bold;">${monthNames[month]} ${year}</h2>
+                    <button class="btn btn-secondary" onclick="changeMonth(1)">Siguiente →</button>
+                </div>
+                
+                <div class="calendar-month">
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Dom</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Lun</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Mar</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Mié</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Jue</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Vie</div>
+                    <div style="font-weight: bold; text-align: center; padding: 10px;">Sáb</div>
+            `;
+            
+            // Días del mes anterior
+            const prevMonth = new Date(year, month, 0);
+            const prevMonthDays = prevMonth.getDate();
+            for (let i = startDay - 1; i >= 0; i--) {
+                const day = prevMonthDays - i;
+                html += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+            
+            // Días del mes actual
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = formatDate(date);
+                const dayTasks = tasks.filter(t => t.date === dateStr);
+                const isToday = date.toDateString() === TODAY.toDateString();
+                
+                html += `
+                    <div class="calendar-day ${isToday ? 'today' : ''}" onclick="viewDayTasks('${dateStr}')">
+                        <div class="day-number">${day}</div>
+                        <div class="day-tasks">
+                            ${dayTasks.slice(0, 3).map(t => `
+                                <span class="task-dot" style="background: ${
+                                    t.priority === 'high' ? 'var(--danger)' :
+                                    t.priority === 'medium' ? 'var(--warning)' :
+                                    t.priority === 'low' ? 'var(--success)' :
+                                    'var(--primary)'
+                                }"></span>
+                            `).join('')}
+                            ${dayTasks.length > 3 ? `<div style="font-size: 10px; margin-top: 4px;">+${dayTasks.length - 3}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Días del siguiente mes
+            const remainingDays = 42 - (startDay + daysInMonth);
+            for (let day = 1; day <= remainingDays; day++) {
+                html += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+        
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            render();
+        }
+        
+        function viewDayTasks(dateStr) {
+            const date = new Date(dateStr);
+            currentDate = date;
+            changeView('today');
+        }
+        
+        function renderStats(content) {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const todayTasks = tasks.filter(t => t.date === formatDate(TODAY)).length;
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            // Tareas por prioridad
+            const highPriority = tasks.filter(t => t.priority === 'high' && !t.completed).length;
+            const mediumPriority = tasks.filter(t => t.priority === 'medium' && !t.completed).length;
+            const lowPriority = tasks.filter(t => t.priority === 'low' && !t.completed).length;
+            
+            // Tareas de esta semana
+            const weekStart = new Date(TODAY);
+            weekStart.setDate(TODAY.getDate() - TODAY.getDay());
+            const weekTasks = tasks.filter(t => {
+                if (!t.date) return false;
+                const taskDate = new Date(t.date);
+                return taskDate >= weekStart;
+            }).length;
+            
+            content.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Tareas</div>
+                        <div class="stat-value">${totalTasks}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Completadas</div>
+                        <div class="stat-value">${completedTasks}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Hoy</div>
+                        <div class="stat-value">${todayTasks}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Tasa de Completado</div>
+                        <div class="stat-value">${completionRate}%</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">📊 Tareas por Prioridad</h3>
+                    <div class="chart-bar">
+                        <div class="chart-label">🔴 Alta</div>
+                        <div class="chart-bar-fill">
+                            <div class="chart-bar-progress" style="width: ${highPriority * 10}%">${highPriority}</div>
+                        </div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-label">🟡 Media</div>
+                        <div class="chart-bar-fill">
+                            <div class="chart-bar-progress" style="width: ${mediumPriority * 10}%">${mediumPriority}</div>
+                        </div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-label">🟢 Baja</div>
+                        <div class="chart-bar-fill">
+                            <div class="chart-bar-progress" style="width: ${lowPriority * 10}%">${lowPriority}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">📈 Resumen Semanal</h3>
+                    <div style="font-size: 18px; color: var(--text-secondary);">
+                        Esta semana tienes <strong style="color: var(--primary); font-size: 32px;">${weekTasks}</strong> tareas programadas
+                    </div>
+                </div>
+            `;
+        }
+        
         function renderSettings(content) {
             content.innerHTML = `
                 <div class="settings-grid">
@@ -1093,72 +1396,22 @@
                         <div class="toggle-switch ${settings.sound ? 'active' : ''}" onclick="toggleSound()"></div>
                     </div>
                     
-                    <div class="setting-item">
+                    <div class="setting-item" style="cursor: pointer;" onclick="requestNotificationPermission()">
                         <div>
-                            <div style="font-weight: bold; margin-bottom: 5px;">📍 Zona Horaria</div>
-                            <div style="font-size: 13px; color: var(--text-secondary);">America/Lima (GMT-5)</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">🔓 Permisos de Notificación</div>
+                            <div style="font-size: 13px; color: var(--text-secondary);">
+                                Estado: ${Notification.permission === 'granted' ? '✅ Activadas' : 
+                                         Notification.permission === 'denied' ? '❌ Bloqueadas' : 
+                                         '⚠️ Pendiente'}
+                            </div>
                         </div>
+                        <button class="btn btn-small btn-primary">Verificar</button>
                     </div>
                 </div>
                 
                 <div style="margin-top: 40px; padding: 20px; background: var(--bg-tertiary); border-radius: 16px; border: 1px solid var(--border);">
                     <h3 style="margin-bottom: 15px;">📊 Datos</h3>
                     <button class="btn btn-danger" onclick="clearAllData()">🗑️ Borrar Todos los Datos</button>
-                </div>
-            `;
-        }
-        
-        function renderShare(content) {
-            const shareId = generateShareId();
-            const shareUrl = `${window.location.origin}${window.location.pathname}?share=${shareId}`;
-            
-            content.innerHTML = `
-                <div>
-                    <h3 style="margin-bottom: 20px;">🔗 Compartir tu Horario</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 30px;">
-                        Genera un link para que otros vean tu disponibilidad de la semana
-                    </p>
-                    
-                    <div class="share-link-box">
-                        <div class="share-link">${shareUrl}</div>
-                        <button class="btn btn-primary" onclick="copyShareLink('${shareUrl}')">
-                            📋 Copiar Link
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 30px;">
-                        <button class="btn btn-secondary" onclick="downloadScheduleImage()">
-                            📸 Descargar como Imagen
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function renderStats(content) {
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(t => t.completed).length;
-            const todayTasks = tasks.filter(t => t.date === formatDate(TODAY)).length;
-            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-            
-            content.innerHTML = `
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Tareas</div>
-                        <div class="stat-value">${totalTasks}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Completadas</div>
-                        <div class="stat-value">${completedTasks}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Hoy</div>
-                        <div class="stat-value">${todayTasks}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Tasa de Completado</div>
-                        <div class="stat-value">${completionRate}%</div>
-                    </div>
                 </div>
             `;
         }
@@ -1314,139 +1567,14 @@
             closeModal();
             render();
             scheduleReminders(task);
-        }
-        
-        function scheduleReminders(task) {
-            if (!task.date || !task.time || !task.reminders || task.reminders.length === 0) return;
             
-            const taskDateTime = new Date(`${task.date}T${task.time}`);
-            
-            task.reminders.forEach(reminder => {
-                const reminderTime = new Date(taskDateTime.getTime() - (reminder.minutes * 60000));
-                const now = new Date();
-                
-                if (reminderTime > now) {
-                    const timeUntil = reminderTime.getTime() - now.getTime();
-                    setTimeout(() => {
-                        showNotification(`🔔 Recordatorio: ${task.title}`, `En ${reminder.label}`);
-                    }, timeUntil);
-                }
-            });
-        }
-        
-        function checkReminders() {
-            setInterval(() => {
-                const now = new Date();
-                tasks.forEach(task => {
-                    if (task.completed || !task.date || !task.time) return;
-                    
-                    const taskDateTime = new Date(`${task.date}T${task.time}`);
-                    const diffMinutes = Math.floor((taskDateTime - now) / 60000);
-                    
-                    if ([5, 15, 30, 60, 1440, 10080].includes(diffMinutes)) {
-                        showNotification(`🔔 Recordatorio: ${task.title}`, `En ${diffMinutes} minutos`);
-                    }
-                });
-            }, 60000);
-        }
-        
-        function openVoiceModal() {
-            if (!('webkitSpeechRecognition' in window)) {
-                alert('❌ Tu navegador no soporta reconocimiento de voz. Usa Chrome o Edge.');
-                return;
+            // Notificar inmediatamente de la nueva tarea
+            if (!editingTaskId && task.date && task.time) {
+                showNotification(
+                    '📝 Nueva tarea creada',
+                    `${task.title} - ${task.date} ${task.time}`
+                );
             }
-            document.getElementById('voiceModal').classList.add('show');
-        }
-        
-        function startVoiceRecognition() {
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'es-PE';
-            recognition.continuous = false;
-            recognition.interimResults = true;
-            
-            const voiceText = document.getElementById('voiceText');
-            const voiceWave = document.getElementById('voiceWave');
-            const btn = document.getElementById('voiceStartBtn');
-            
-            btn.textContent = '🎤 Escuchando...';
-            voiceText.textContent = 'Hablando...';
-            voiceWave.style.opacity = '1';
-            
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                voiceText.textContent = transcript;
-                
-                if (event.results[0].isFinal) {
-                    parseVoiceCommand(transcript);
-                    setTimeout(() => closeModal(), 1000);
-                }
-            };
-            
-            recognition.onerror = function() {
-                btn.textContent = '🎤 Comenzar';
-                voiceText.textContent = '❌ Error. Intenta de nuevo';
-                voiceWave.style.opacity = '0.3';
-            };
-            
-            recognition.onend = function() {
-                btn.textContent = '🎤 Comenzar';
-                voiceWave.style.opacity = '0.3';
-            };
-            
-            recognition.start();
-        }
-        
-        function parseVoiceCommand(command) {
-            showToast(`Procesando: "${command}"`);
-            
-            let detectedDate = '';
-            let detectedTime = '';
-            let detectedPriority = 'none';
-            let title = command.toLowerCase();
-            
-            // Detectar día
-            const dayNames = {
-                'hoy': 0, 'mañana': 1, 'lunes': 1, 'martes': 2, 'miércoles': 3,
-                'miercoles': 3, 'jueves': 4, 'viernes': 5, 'sábado': 6, 'sabado': 6, 'domingo': 0
-            };
-            
-            for (const [day, offset] of Object.entries(dayNames)) {
-                if (title.includes(day)) {
-                    const targetDate = new Date(TODAY);
-                    targetDate.setDate(TODAY.getDate() + offset);
-                    detectedDate = formatDate(targetDate);
-                    title = title.replace(day, '').trim();
-                    break;
-                }
-            }
-            
-            // Detectar hora
-            const timeMatch = title.match(/(\d{1,2})\s*(am|pm|de la mañana|de la tarde|de la noche)/i);
-            if (timeMatch) {
-                let hour = parseInt(timeMatch[1]);
-                if (timeMatch[2].includes('pm') || timeMatch[2].includes('tarde') || timeMatch[2].includes('noche')) {
-                    if (hour < 12) hour += 12;
-                }
-                detectedTime = `${hour.toString().padStart(2, '0')}:00`;
-                title = title.replace(timeMatch[0], '').trim();
-            }
-            
-            // Detectar prioridad
-            if (title.includes('alta prioridad') || title.includes('urgente') || title.includes('importante')) {
-                detectedPriority = 'high';
-                title = title.replace(/alta prioridad|urgente|importante/g, '').trim();
-            }
-            
-            title = title.replace(/agregar|crear|recordar/g, '').trim();
-            
-            // Crear tarea
-            document.getElementById('taskTitle').value = title || 'Nueva tarea';
-            if (detectedDate) document.getElementById('taskDate').value = detectedDate;
-            if (detectedTime) document.getElementById('taskTime').value = detectedTime;
-            selectedPriority = detectedPriority;
-            
-            openTaskModal();
-            showToast('✅ Comando procesado');
         }
         
         function toggleTheme() {
@@ -1460,6 +1588,10 @@
             settings.notifications = !settings.notifications;
             saveData();
             render();
+            
+            if (settings.notifications) {
+                requestNotificationPermission();
+            }
         }
         
         function toggleSound() {
@@ -1475,17 +1607,8 @@
             }
         }
         
-        function generateShareId() {
-            return Math.random().toString(36).substring(7);
-        }
-        
-        function copyShareLink(url) {
-            navigator.clipboard.writeText(url);
-            showToast('📋 Link copiado al portapapeles');
-        }
-        
-        function downloadScheduleImage() {
-            showToast('📸 Función en desarrollo');
+        function openVoiceModal() {
+            alert('🎤 Reconocimiento de voz disponible en la versión completa');
         }
         
         function goToToday() {
