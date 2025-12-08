@@ -5,7 +5,6 @@ const urlsToCache = [
   '/manifest.json'
 ];
 
-// Instalación del Service Worker
 self.addEventListener('install', event => {
   console.log('✅ Service Worker instalando...');
   event.waitUntil(
@@ -19,7 +18,6 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activación del Service Worker
 self.addEventListener('activate', event => {
   console.log('✅ Service Worker activado');
   event.waitUntil(
@@ -37,7 +35,6 @@ self.addEventListener('activate', event => {
   return self.clients.claim();
 });
 
-// Estrategia de cache
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -46,14 +43,12 @@ self.addEventListener('fetch', event => {
           return response;
         }
         return fetch(event.request).catch(() => {
-          // Si falla el fetch, no hacer nada (evita errores 404)
           return new Response('', { status: 200 });
         });
       })
   );
 });
 
-// Notificaciones push (ARREGLADO - sin iconos que no existen)
 self.addEventListener('push', event => {
   const options = {
     body: event.data ? event.data.text() : 'Tienes una nueva notificación',
@@ -67,7 +62,6 @@ self.addEventListener('push', event => {
   );
 });
 
-// Click en notificación
 self.addEventListener('notificationclick', event => {
   console.log('🔔 Notificación clickeada');
   event.notification.close();
