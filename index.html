@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,13 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    
+
     <div class="sidebar" id="sidebar">
         <div class="logo">✓ TickTick Ultra PRO</div>
-        
+
         <div class="menu-item active" onclick="changeView('inbox')">
             📥 Inbox
             <span class="badge" style="background: var(--primary); color: white;" id="inboxCount">0</span>
@@ -23,36 +25,49 @@
         <div class="menu-item" onclick="changeView('today')">📅 Hoy</div>
         <div class="menu-item" onclick="changeView('week')">📆 Semana</div>
         <div class="menu-item" onclick="changeView('month')">🗓️ Mes</div>
-        
+
         <div class="menu-section">🎓 Estudiante</div>
         <div class="menu-item" onclick="changeView('schedule')">📚 Horario Clases</div>
         <div class="menu-item" onclick="changeView('exams')">📝 Exámenes</div>
-        
+
+        <div class="menu-section">🎵 Creatividad & Social</div>
+        <div class="menu-item" onclick="changeView('music')">🎹 Producción Musical</div>
+        <div class="menu-item" onclick="changeView('social')">📱 Redes Sociales</div>
+
         <div class="menu-section">💪 Productividad</div>
         <div class="menu-item" onclick="changeView('habits')">💪 Hábitos</div>
         <div class="menu-item" onclick="changeView('pomodoro')">🍅 Pomodoro</div>
         <div class="menu-item" onclick="changeView('stats')">📈 Estadísticas</div>
-        
+
         <div class="menu-section">⚙️ Más</div>
         <div class="menu-item" onclick="changeView('settings')">⚙️ Configuración</div>
     </div>
-    
+
     <div class="main-content">
         <div class="header">
             <div class="header-title" id="viewTitle">Inbox</div>
             <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div id="userProfile" style="display: none; align-items: center; gap: 10px;">
+                    <img id="userAvatar" src=""
+                        style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--primary);">
+                    <span id="userName" style="font-size: 14px; font-weight: bold;"></span>
+                    <button class="btn btn-secondary btn-small" onclick="logout()" title="Cerrar Sesión">🚪</button>
+                </div>
+                <button id="loginBtn" class="btn btn-primary btn-small" onclick="loginWithEmail()">
+                    <span style="margin-right: 5px;">⚡</span> Iniciar Sesión
+                </button>
                 <button class="btn btn-secondary btn-small" onclick="goToToday()">📅 Hoy</button>
                 <button class="btn btn-primary btn-small" onclick="openTaskModal()">+ Nueva Tarea</button>
             </div>
         </div>
-        
+
         <div class="content-card">
             <div id="mainContent"></div>
         </div>
     </div>
-    
+
     <button class="fab" onclick="openTaskModal()">+</button>
-    
+
     <!-- MODAL DE TAREA -->
     <div class="modal" id="taskModal">
         <div class="modal-content">
@@ -62,12 +77,12 @@
                     <label class="form-label">📝 Título *</label>
                     <input type="text" class="form-input" id="taskTitle" required placeholder="¿Qué necesitas hacer?">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">📄 Descripción</label>
                     <textarea class="form-textarea" id="taskDesc" placeholder="Añade detalles..."></textarea>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label class="form-label">📅 Fecha</label>
@@ -78,7 +93,7 @@
                         <input type="time" class="form-input" id="taskTime" onchange="updateReminderOptions()">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">⚡ Prioridad</label>
                     <div class="priority-options">
@@ -100,18 +115,19 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">🔔 Recordatorios</label>
                     <select class="form-input" id="reminderSelect" onchange="addReminder(this.value)">
                         <option value="">Seleccionar...</option>
                     </select>
                     <div id="remindersContainer" style="margin-top: 10px;"></div>
-                    <div id="reminderWarning" style="margin-top: 10px; padding: 10px; background: var(--warning); color: white; border-radius: 8px; display: none; font-size: 13px;">
+                    <div id="reminderWarning"
+                        style="margin-top: 10px; padding: 10px; background: var(--warning); color: white; border-radius: 8px; display: none; font-size: 13px;">
                         ⚠️ Selecciona fecha y hora primero
                     </div>
                 </div>
-                
+
                 <div style="display: flex; gap: 10px; margin-top: 30px;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Guardar</button>
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">✕ Cancelar</button>
@@ -120,35 +136,53 @@
         </div>
     </div>
 
-    <!-- 🔥 FIREBASE SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-        
-        // 🔥 TU CONFIGURACIÓN DE FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHS-hDkcZKgVKY9pMtjblgq_jiPdD95XM",
-            authDomain: "timeforyou-72f22.firebaseapp.com",
-            projectId: "timeforyou-72f22",
-            storageBucket: "timeforyou-72f22.firebasestorage.app",
-            messagingSenderId: "267962735772",
-            appId: "1:267962735772:web:1f26b8463a9b659d5a6159"
-        };
+    <!-- Generic Input Modal -->
+    <div id="inputModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <h2 id="inputModalTitle" style="margin-bottom: 20px;">Nuevo Item</h2>
+            <form id="inputModalForm">
+                <div id="inputModalFields">
+                    <!-- Dynamic Fields -->
+                </div>
+                <div class="modal-buttons" style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeInputModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Inicializar Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <div id="confirmModal" class="modal">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <h3 id="confirmModalTitle" style="margin-bottom: 10px;">¿Estás seguro?</h3>
+            <p id="confirmModalText" style="color: var(--text-secondary); margin-bottom: 20px;">Esta acción no se puede
+                deshacer.</p>
+            <div class="modal-buttons" style="display: flex; gap: 10px; justify-content: center;">
+                <button id="confirmBtn" class="btn btn-danger" style="min-width: 100px;">Eliminar</button>
+                <button class="btn btn-secondary" onclick="closeConfirmModal()"
+                    style="min-width: 100px;">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
-        // Hacer disponible globalmente
-        window.db = db;
-        window.firestore = { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, setDoc };
-        
-        console.log('🔥 Firebase inicializado correctamente');
-        console.log('📊 Proyecto:', firebaseConfig.projectId);
+    <!-- 🔥 SUPABASE SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // ⚡ TU CONFIGURACIÓN DE SUPABASE
+        const supabaseUrl = 'https://csqvjwvdjzjuvwddewoy.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXZqd3ZkanpqdXZ3ZGRld295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTA4MzIsImV4cCI6MjA4MDc4NjgzMn0.p5g8ESzDJ-aAlq3nSoRX8qS2nBsM9xrK3Et3wWEXmlw'
+
+        // Inicializar
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey)
+        window.supabaseClient = _supabase
+
+        console.log('⚡ Supabase inicializado correctamente')
     </script>
 
     <!-- TU APP -->
-    <script src="app.js"></script>
+    <script src="app.js?v=2"></script>
 
     <!-- SERVICE WORKER -->
     <script>
@@ -159,4 +193,5 @@
         }
     </script>
 </body>
+
 </html>
