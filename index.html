@@ -45,7 +45,6 @@
             transition: all 0.3s ease;
         }
 
-        /* SIDEBAR */
         .sidebar {
             position: fixed;
             left: 0;
@@ -107,7 +106,6 @@
             margin-bottom: 10px;
         }
 
-        /* MAIN CONTENT */
         .main-content {
             margin-left: 280px;
             padding: 20px;
@@ -146,7 +144,6 @@
             box-shadow: 0 4px 20px var(--shadow);
         }
 
-        /* BUTTONS */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -180,7 +177,6 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-small { padding: 8px 16px; font-size: 13px; }
 
-        /* TASK CARD */
         .task-card {
             background: var(--bg-tertiary);
             border-radius: 16px;
@@ -215,9 +211,7 @@
         .task-card.priority-medium::before { background: var(--warning); }
         .task-card.priority-low::before { background: var(--success); }
 
-        .task-card.completed {
-            opacity: 0.6;
-        }
+        .task-card.completed { opacity: 0.6; }
 
         .task-header {
             display: flex;
@@ -279,7 +273,6 @@
             border: 1px solid var(--border);
         }
 
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -365,7 +358,6 @@
             font-family: inherit;
         }
 
-        /* FAB BUTTONS */
         .fab {
             position: fixed;
             bottom: 30px;
@@ -388,37 +380,6 @@
             box-shadow: 0 12px 40px rgba(99, 102, 241, 0.6);
         }
 
-        .voice-btn {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--success), #059669);
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
-            transition: all 0.3s;
-            z-index: 99;
-        }
-
-        .voice-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .voice-btn.listening {
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
-            50% { transform: scale(1.15); box-shadow: 0 12px 50px rgba(16, 185, 129, 0.8); }
-        }
-
-        /* CALENDAR MONTH */
         .calendar-month {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -458,11 +419,6 @@
             margin-bottom: 8px;
         }
 
-        .day-tasks {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
         .task-dot {
             width: 6px;
             height: 6px;
@@ -471,7 +427,6 @@
             margin: 2px;
         }
 
-        /* STATS */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -501,49 +456,6 @@
             letter-spacing: 1px;
         }
 
-        .chart-container {
-            background: var(--bg-tertiary);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .chart-label {
-            width: 100px;
-            font-size: 13px;
-        }
-
-        .chart-bar-fill {
-            flex: 1;
-            height: 30px;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-bar-progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 8px;
-            transition: width 1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* WEEK GRID */
         .week-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -618,7 +530,6 @@
             margin-left: auto;
         }
 
-        /* TOAST */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -635,7 +546,6 @@
             backdrop-filter: blur(20px);
         }
 
-        /* SETTINGS */
         .settings-grid {
             display: grid;
             gap: 20px;
@@ -681,65 +591,6 @@
             left: 26px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .menu-toggle {
-                display: block !important;
-            }
-            .calendar-month {
-                gap: 5px;
-            }
-            .week-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 101;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 4px 15px var(--shadow);
-            color: var(--text-primary);
-        }
-
-        /* SCROLLBAR */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* NOTIFICATION BANNER */
         .notification-banner {
             position: fixed;
             top: 20px;
@@ -766,6 +617,176 @@
             align-items: center;
             gap: 10px;
         }
+
+        /* HORARIO DE CLASES */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .schedule-header {
+            background: var(--bg-tertiary);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .schedule-time {
+            background: var(--bg-tertiary);
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .schedule-cell {
+            background: var(--bg-secondary);
+            padding: 10px;
+            min-height: 80px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .schedule-cell:hover {
+            background: var(--glass);
+        }
+
+        .schedule-cell.has-class {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+        }
+
+        /* HÁBITOS */
+        .habit-card {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .habit-tracker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .habit-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+        }
+
+        .habit-day:hover {
+            border-color: var(--primary);
+        }
+
+        .habit-day.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* POMODORO */
+        .pomodoro-timer {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .timer-display {
+            font-size: 120px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 40px 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block !important;
+            }
+            .calendar-month {
+                gap: 5px;
+            }
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+            .timer-display {
+                font-size: 72px;
+            }
+            .schedule-grid {
+                grid-template-columns: 60px repeat(5, 1fr);
+                font-size: 12px;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            color: var(--text-primary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
@@ -782,29 +803,16 @@
         <div class="menu-item" onclick="changeView('week')">📆 Semana</div>
         <div class="menu-item" onclick="changeView('month')">🗓️ Mes</div>
         
-        <div class="menu-section">🎯 Vistas</div>
-        <div class="menu-item" onclick="changeView('kanban')">📊 Kanban</div>
-        <div class="menu-item" onclick="changeView('matrix')">⚡ Matriz Eisenhower</div>
-        
         <div class="menu-section">🎓 Estudiante</div>
         <div class="menu-item" onclick="changeView('schedule')">📚 Horario Clases</div>
         <div class="menu-item" onclick="changeView('exams')">📝 Exámenes</div>
         
-        <div class="menu-section">📹 Influencer</div>
-        <div class="menu-item" onclick="changeView('content')">🎬 Contenido</div>
-        <div class="menu-item" onclick="changeView('ideas')">💡 Ideas Videos</div>
-        
-        <div class="menu-section">🎵 Música</div>
-        <div class="menu-item" onclick="changeView('music')">🎼 Proyectos</div>
-        <div class="menu-item" onclick="changeView('sessions')">🎙️ Sesiones</div>
-        
-        <div class="menu-section">💪 Desarrollo</div>
+        <div class="menu-section">💪 Productividad</div>
         <div class="menu-item" onclick="changeView('habits')">💪 Hábitos</div>
         <div class="menu-item" onclick="changeView('pomodoro')">🍅 Pomodoro</div>
         <div class="menu-item" onclick="changeView('stats')">📈 Estadísticas</div>
         
         <div class="menu-section">⚙️ Más</div>
-        <div class="menu-item" onclick="changeView('share')">🔗 Compartir Horario</div>
         <div class="menu-item" onclick="changeView('settings')">⚙️ Configuración</div>
     </div>
     
@@ -823,7 +831,6 @@
     </div>
     
     <button class="fab" onclick="openTaskModal()">+</button>
-    <button class="voice-btn" id="voiceBtn" onclick="openVoiceModal()">🎤</button>
     
     <!-- MODAL DE TAREA -->
     <div class="modal" id="taskModal">
@@ -843,11 +850,11 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label class="form-label">📅 Fecha</label>
-                        <input type="date" class="form-input" id="taskDate">
+                        <input type="date" class="form-input" id="taskDate" onchange="updateReminderOptions()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">⏰ Hora</label>
-                        <input type="time" class="form-input" id="taskTime">
+                        <input type="time" class="form-input" id="taskTime" onchange="updateReminderOptions()">
                     </div>
                 </div>
                 
@@ -877,13 +884,11 @@
                     <label class="form-label">🔔 Recordatorios</label>
                     <select class="form-input" id="reminderSelect" onchange="addReminder(this.value)">
                         <option value="">Seleccionar...</option>
-                        <option value="5">5 minutos antes</option>
-                        <option value="15">15 minutos antes</option>
-                        <option value="30">30 minutos antes</option>
-                        <option value="60">1 hora antes</option>
-                        <option value="1440">1 día antes</option>
                     </select>
                     <div id="remindersContainer" style="margin-top: 10px;"></div>
+                    <div id="reminderWarning" style="margin-top: 10px; padding: 10px; background: var(--warning); color: white; border-radius: 8px; display: none; font-size: 13px;">
+                        ⚠️ Selecciona fecha y hora primero
+                    </div>
                 </div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 30px;">
@@ -896,6 +901,8 @@
     
     <script>
         let tasks = [];
+        let classes = [];
+        let habits = [];
         let settings = {
             theme: 'dark',
             sound: true,
@@ -907,7 +914,9 @@
         let editingTaskId = null;
         let selectedPriority = 'none';
         let reminders = [];
-        let notificationTimers = [];
+        let pomodoroTime = 1500;
+        let pomodoroInterval = null;
+        let pomodoroRunning = false;
         
         const TODAY = new Date();
         TODAY.setHours(0, 0, 0, 0);
@@ -931,13 +940,20 @@
         function loadData() {
             const savedTasks = localStorage.getItem('ticktick-tasks');
             const savedSettings = localStorage.getItem('ticktick-settings');
+            const savedClasses = localStorage.getItem('ticktick-classes');
+            const savedHabits = localStorage.getItem('ticktick-habits');
+            
             if (savedTasks) tasks = JSON.parse(savedTasks);
             if (savedSettings) settings = JSON.parse(savedSettings);
+            if (savedClasses) classes = JSON.parse(savedClasses);
+            if (savedHabits) habits = JSON.parse(savedHabits);
         }
         
         function saveData() {
             localStorage.setItem('ticktick-tasks', JSON.stringify(tasks));
             localStorage.setItem('ticktick-settings', JSON.stringify(settings));
+            localStorage.setItem('ticktick-classes', JSON.stringify(classes));
+            localStorage.setItem('ticktick-habits', JSON.stringify(habits));
         }
         
         function setMinDate() {
@@ -967,11 +983,13 @@
         
         function showTestNotification() {
             setTimeout(() => {
-                showNotification('TickTick Ultra PRO', '¡Notificaciones funcionando correctamente! 🎉');
+                showNotification('TickTick Ultra PRO', '¡Sistema de notificaciones funcionando! 🎉');
             }, 2000);
         }
         
         function showNotification(title, body, icon = '✓') {
+            console.log('🔔 Intentando notificar:', title, body);
+            
             if (settings.notifications && Notification.permission === 'granted') {
                 const notification = new Notification(title, { 
                     body, 
@@ -989,12 +1007,9 @@
                     this.close();
                 };
                 
-                // Mostrar también banner interno
                 showNotificationBanner(title, body);
-                
                 return notification;
-            } else if (Notification.permission === 'denied') {
-                // Si están bloqueadas, mostrar solo banner interno
+            } else {
                 showNotificationBanner(title, body);
             }
         }
@@ -1019,65 +1034,109 @@
             audio.play().catch(() => {});
         }
         
-        // SISTEMA DE RECORDATORIOS MEJORADO
+        // SISTEMA DE RECORDATORIOS MEJORADO - CHEQUEA CADA 10 SEGUNDOS
         function startReminderChecker() {
-            // Limpiar timers anteriores
-            notificationTimers.forEach(timer => clearTimeout(timer));
-            notificationTimers = [];
-            
-            // Chequear cada minuto
-            setInterval(checkAllReminders, 60000);
-            
-            // Chequear inmediatamente al cargar
+            // Chequear cada 10 segundos (no 60)
+            setInterval(checkAllReminders, 10000);
+            // Chequear inmediatamente
             checkAllReminders();
+            
+            console.log('✅ Sistema de recordatorios iniciado (chequea cada 10 seg)');
         }
         
         function checkAllReminders() {
             const now = new Date();
             
             tasks.forEach(task => {
-                if (task.completed || !task.date || !task.time || !task.reminders) return;
+                if (task.completed || !task.date || !task.time) return;
                 
                 const taskDateTime = new Date(`${task.date}T${task.time}`);
+                const diffMs = taskDateTime - now;
+                const diffSeconds = Math.floor(diffMs / 1000);
+                const diffMinutes = Math.floor(diffSeconds / 60);
                 
-                task.reminders.forEach(reminder => {
-                    const reminderTime = new Date(taskDateTime.getTime() - (reminder.minutes * 60000));
-                    const diffMs = reminderTime - now;
-                    const diffMinutes = Math.floor(diffMs / 60000);
-                    
-                    // Si falta exactamente el tiempo del recordatorio (±1 minuto)
-                    if (diffMinutes >= 0 && diffMinutes <= 1) {
-                        showNotification(
-                            `🔔 Recordatorio: ${task.title}`,
-                            `En ${reminder.label.replace(' antes', '')}`
-                        );
-                    }
-                });
+                // NOTIFICACIÓN EN EL MOMENTO EXACTO (±30 segundos)
+                if (diffSeconds >= -30 && diffSeconds <= 30 && !task.notifiedExact) {
+                    console.log('🔔 NOTIFICACIÓN EXACTA:', task.title);
+                    showNotification(
+                        `⏰ ¡ES HORA! ${task.title}`,
+                        `Tu tarea programada para ${task.time}`
+                    );
+                    task.notifiedExact = true;
+                    saveData();
+                }
+                
+                // RECORDATORIOS ANTES
+                if (task.reminders && task.reminders.length > 0) {
+                    task.reminders.forEach((reminder, index) => {
+                        const reminderKey = `notified_${reminder.minutes}`;
+                        
+                        if (!task[reminderKey]) {
+                            const targetMinutes = reminder.minutes;
+                            
+                            // Si el tiempo que falta coincide con el recordatorio (±1 minuto)
+                            if (diffMinutes >= targetMinutes - 1 && diffMinutes <= targetMinutes + 1) {
+                                console.log(`🔔 RECORDATORIO ${reminder.minutes}min:`, task.title);
+                                showNotification(
+                                    `🔔 Recordatorio: ${task.title}`,
+                                    reminder.label
+                                );
+                                task[reminderKey] = true;
+                                saveData();
+                            }
+                        }
+                    });
+                }
             });
         }
         
-        function scheduleReminders(task) {
-            if (!task.date || !task.time || !task.reminders || task.reminders.length === 0) return;
+        // ACTUALIZAR OPCIONES DE RECORDATORIOS SEGÚN FECHA/HORA
+        function updateReminderOptions() {
+            const dateInput = document.getElementById('taskDate').value;
+            const timeInput = document.getElementById('taskTime').value;
+            const select = document.getElementById('reminderSelect');
+            const warning = document.getElementById('reminderWarning');
             
-            const taskDateTime = new Date(`${task.date}T${task.time}`);
+            if (!dateInput || !timeInput) {
+                select.innerHTML = '<option value="">Selecciona fecha y hora primero</option>';
+                warning.style.display = 'block';
+                return;
+            }
             
-            task.reminders.forEach(reminder => {
-                const reminderTime = new Date(taskDateTime.getTime() - (reminder.minutes * 60000));
-                const now = new Date();
-                
-                if (reminderTime > now) {
-                    const timeUntil = reminderTime.getTime() - now.getTime();
-                    
-                    const timer = setTimeout(() => {
-                        showNotification(
-                            `🔔 Recordatorio: ${task.title}`,
-                            reminder.label
-                        );
-                    }, timeUntil);
-                    
-                    notificationTimers.push(timer);
-                }
+            warning.style.display = 'none';
+            
+            const taskDateTime = new Date(`${dateInput}T${timeInput}`);
+            const now = new Date();
+            const diffMs = taskDateTime - now;
+            const diffMinutes = Math.floor(diffMs / 60000);
+            
+            const allOptions = [
+                { value: 0, label: 'En el momento exacto', minutes: 0 },
+                { value: 5, label: '5 minutos antes', minutes: 5 },
+                { value: 15, label: '15 minutos antes', minutes: 15 },
+                { value: 30, label: '30 minutos antes', minutes: 30 },
+                { value: 60, label: '1 hora antes', minutes: 60 },
+                { value: 120, label: '2 horas antes', minutes: 120 },
+                { value: 1440, label: '1 día antes', minutes: 1440 }
+            ];
+            
+            // FILTRAR OPCIONES LÓGICAS
+            const validOptions = allOptions.filter(opt => {
+                return diffMinutes > opt.minutes;
             });
+            
+            select.innerHTML = '<option value="">Seleccionar...</option>';
+            
+            if (validOptions.length === 0) {
+                select.innerHTML += '<option value="" disabled>⚠️ La tarea es muy pronto para recordatorios</option>';
+            } else {
+                validOptions.forEach(opt => {
+                    select.innerHTML += `<option value="${opt.value}">${opt.label}</option>`;
+                });
+            }
+            
+            console.log(`⏱️ Tiempo hasta tarea: ${diffMinutes} minutos`);
+            console.log(`✅ Opciones válidas: ${validOptions.length}`);
         }
         
         function applyTheme() {
@@ -1098,18 +1157,11 @@
                 'today': 'Hoy',
                 'week': 'Esta Semana',
                 'month': 'Este Mes',
-                'kanban': 'Vista Kanban',
-                'matrix': 'Matriz Eisenhower',
                 'schedule': 'Horario de Clases',
                 'exams': 'Exámenes y Entregas',
-                'content': 'Calendario de Contenido',
-                'ideas': 'Ideas de Videos',
-                'music': 'Proyectos Musicales',
-                'sessions': 'Sesiones de Grabación',
                 'habits': 'Rastreador de Hábitos',
                 'pomodoro': 'Pomodoro Timer',
                 'stats': 'Estadísticas',
-                'share': 'Compartir Horario',
                 'settings': 'Configuración'
             };
             
@@ -1138,6 +1190,15 @@
                     break;
                 case 'month':
                     renderMonth(content);
+                    break;
+                case 'schedule':
+                    renderSchedule(content);
+                    break;
+                case 'habits':
+                    renderHabits(content);
+                    break;
+                case 'pomodoro':
+                    renderPomodoro(content);
                     break;
                 case 'stats':
                     renderStats(content);
@@ -1244,7 +1305,6 @@
                     <div style="font-weight: bold; text-align: center; padding: 10px;">Sáb</div>
             `;
             
-            // Días del mes anterior
             const prevMonth = new Date(year, month, 0);
             const prevMonthDays = prevMonth.getDate();
             for (let i = startDay - 1; i >= 0; i--) {
@@ -1252,7 +1312,6 @@
                 html += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
             }
             
-            // Días del mes actual
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
                 const dateStr = formatDate(date);
@@ -1262,7 +1321,7 @@
                 html += `
                     <div class="calendar-day ${isToday ? 'today' : ''}" onclick="viewDayTasks('${dateStr}')">
                         <div class="day-number">${day}</div>
-                        <div class="day-tasks">
+                        <div style="margin-top: 5px;">
                             ${dayTasks.slice(0, 3).map(t => `
                                 <span class="task-dot" style="background: ${
                                     t.priority === 'high' ? 'var(--danger)' :
@@ -1277,7 +1336,6 @@
                 `;
             }
             
-            // Días del siguiente mes
             const remainingDays = 42 - (startDay + daysInMonth);
             for (let day = 1; day <= remainingDays; day++) {
                 html += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
@@ -1298,18 +1356,257 @@
             changeView('today');
         }
         
+        // HORARIO DE CLASES
+        function renderSchedule(content) {
+            const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+            const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+            
+            let html = `
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                    <h3>📚 Tu Horario Semanal</h3>
+                    <button class="btn btn-primary btn-small" onclick="addClass()">+ Agregar Clase</button>
+                </div>
+                
+                <div class="schedule-grid">
+                    <div class="schedule-header"></div>
+                    ${days.map(day => `<div class="schedule-header">${day}</div>`).join('')}
+                    
+                    ${hours.map(hour => `
+                        <div class="schedule-time">${hour}</div>
+                        ${days.map((day, dayIndex) => {
+                            const classData = classes.find(c => c.day === dayIndex && c.hour === hour);
+                            return `
+                                <div class="schedule-cell ${classData ? 'has-class' : ''}" 
+                                     onclick="editClass(${dayIndex}, '${hour}')">
+                                    ${classData ? `<div>${classData.name}<br><small>${classData.room}</small></div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    `).join('')}
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+        
+        function addClass() {
+            const name = prompt('📚 Nombre de la clase:');
+            if (!name) return;
+            
+            const day = parseInt(prompt('Día (0=Lunes, 1=Martes, 2=Miércoles, 3=Jueves, 4=Viernes):'));
+            const hour = prompt('Hora (formato 08:00):');
+            const room = prompt('Salón/Aula:');
+            
+            classes.push({ name, day, hour, room });
+            saveData();
+            render();
+            showToast('✅ Clase agregada');
+        }
+        
+        function editClass(day, hour) {
+            const classIndex = classes.findIndex(c => c.day === day && c.hour === hour);
+            
+            if (classIndex >= 0) {
+                if (confirm('¿Eliminar esta clase?')) {
+                    classes.splice(classIndex, 1);
+                    saveData();
+                    render();
+                    showToast('🗑️ Clase eliminada');
+                }
+            } else {
+                addClass();
+            }
+        }
+        
+        // HÁBITOS
+        function renderHabits(content) {
+            const today = new Date();
+            const weekDays = Array.from({length: 7}, (_, i) => {
+                const d = new Date(today);
+                d.setDate(today.getDate() - today.getDay() + i);
+                return d;
+            });
+            
+            let html = `
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                    <h3>💪 Tus Hábitos</h3>
+                    <button class="btn btn-primary btn-small" onclick="addHabit()">+ Nuevo Hábito</button>
+                </div>
+            `;
+            
+            if (habits.length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <div class="empty-icon">💪</div>
+                        <p>Crea tu primer hábito para comenzar</p>
+                    </div>
+                `;
+            } else {
+                habits.forEach((habit, habitIndex) => {
+                    const completedDays = habit.completed || {};
+                    const streak = calculateStreak(completedDays);
+                    
+                    html += `
+                        <div class="habit-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="font-size: 18px;">${habit.name}</h4>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <span style="background: var(--success); color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                                        🔥 ${streak} días
+                                    </span>
+                                    <button class="btn btn-danger btn-small" onclick="deleteHabit(${habitIndex})">🗑️</button>
+                                </div>
+                            </div>
+                            
+                            <div class="habit-tracker">
+                                ${weekDays.map((date, i) => {
+                                    const dateStr = formatDate(date);
+                                    const isCompleted = completedDays[dateStr];
+                                    const isToday = date.toDateString() === new Date().toDateString();
+                                    
+                                    return `
+                                        <div class="habit-day ${isCompleted ? 'completed' : ''}" 
+                                             onclick="toggleHabit(${habitIndex}, '${dateStr}')"
+                                             style="${isToday ? 'border-color: var(--primary); border-width: 3px;' : ''}">
+                                            <div style="font-size: 10px; margin-bottom: 3px;">${getDayName(date)}</div>
+                                            <div>${isCompleted ? '✓' : date.getDate()}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            content.innerHTML = html;
+        }
+        
+        function addHabit() {
+            const name = prompt('💪 Nombre del hábito:');
+            if (name) {
+                habits.push({ name, completed: {} });
+                saveData();
+                render();
+                showToast('✅ Hábito creado');
+            }
+        }
+        
+        function toggleHabit(index, dateStr) {
+            if (!habits[index].completed) habits[index].completed = {};
+            habits[index].completed[dateStr] = !habits[index].completed[dateStr];
+            saveData();
+            render();
+            if (habits[index].completed[dateStr]) {
+                showToast('✅ ¡Día completado!');
+            }
+        }
+        
+        function deleteHabit(index) {
+            if (confirm('¿Eliminar este hábito?')) {
+                habits.splice(index, 1);
+                saveData();
+                render();
+                showToast('🗑️ Hábito eliminado');
+            }
+        }
+        
+        function calculateStreak(completedDays) {
+            let streak = 0;
+            const today = new Date();
+            
+            for (let i = 0; i < 365; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() - i);
+                const dateStr = formatDate(checkDate);
+                
+                if (completedDays[dateStr]) {
+                    streak++;
+                } else if (i > 0) {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+        
+        // POMODORO
+        function renderPomodoro(content) {
+            const minutes = Math.floor(pomodoroTime / 60);
+            const seconds = pomodoroTime % 60;
+            
+            content.innerHTML = `
+                <div class="pomodoro-timer">
+                    <h3 style="font-size: 24px; margin-bottom: 20px;">🍅 Técnica Pomodoro</h3>
+                    
+                    <div class="timer-display" id="timerDisplay">
+                        ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <button class="btn btn-success" onclick="${pomodoroRunning ? 'pausePomodoro()' : 'startPomodoro()'}">
+                            ${pomodoroRunning ? '⏸️ Pausar' : '▶️ Iniciar'}
+                        </button>
+                        <button class="btn btn-danger" onclick="resetPomodoro()">🔄 Reiniciar</button>
+                    </div>
+                    
+                    <div style="margin-top: 40px; display: flex; gap: 15px; justify-content: center;">
+                        <button class="btn btn-secondary" onclick="setPomodoro(1500)">25 min (Trabajo)</button>
+                        <button class="btn btn-secondary" onclick="setPomodoro(300)">5 min (Descanso)</button>
+                        <button class="btn btn-secondary" onclick="setPomodoro(900)">15 min (Descanso largo)</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function startPomodoro() {
+            pomodoroRunning = true;
+            pomodoroInterval = setInterval(() => {
+                pomodoroTime--;
+                
+                if (pomodoroTime <= 0) {
+                    pausePomodoro();
+                    showNotification('🍅 Pomodoro Completado', '¡Tiempo terminado! Toma un descanso');
+                    pomodoroTime = 1500;
+                }
+                
+                render();
+            }, 1000);
+            render();
+        }
+        
+        function pausePomodoro() {
+            pomodoroRunning = false;
+            if (pomodoroInterval) {
+                clearInterval(pomodoroInterval);
+                pomodoroInterval = null;
+            }
+            render();
+        }
+        
+        function resetPomodoro() {
+            pausePomodoro();
+            pomodoroTime = 1500;
+            render();
+        }
+        
+        function setPomodoro(seconds) {
+            pausePomodoro();
+            pomodoroTime = seconds;
+            render();
+        }
+        
+        // ESTADÍSTICAS
         function renderStats(content) {
             const totalTasks = tasks.length;
             const completedTasks = tasks.filter(t => t.completed).length;
             const todayTasks = tasks.filter(t => t.date === formatDate(TODAY)).length;
             const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
             
-            // Tareas por prioridad
             const highPriority = tasks.filter(t => t.priority === 'high' && !t.completed).length;
             const mediumPriority = tasks.filter(t => t.priority === 'medium' && !t.completed).length;
             const lowPriority = tasks.filter(t => t.priority === 'low' && !t.completed).length;
             
-            // Tareas de esta semana
             const weekStart = new Date(TODAY);
             weekStart.setDate(TODAY.getDate() - TODAY.getDay());
             const weekTasks = tasks.filter(t => {
@@ -1333,38 +1630,53 @@
                         <div class="stat-value">${todayTasks}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Tasa de Completado</div>
-                        <div class="stat-value">${completionRate}%</div>
+                        <div class="stat-label">Esta Semana</div>
+                        <div class="stat-value">${weekTasks}</div>
                     </div>
                 </div>
                 
-                <div class="chart-container">
+                <div style="margin-top: 30px; padding: 30px; background: var(--bg-tertiary); border-radius: 16px;">
                     <h3 style="margin-bottom: 20px;">📊 Tareas por Prioridad</h3>
-                    <div class="chart-bar">
-                        <div class="chart-label">🔴 Alta</div>
-                        <div class="chart-bar-fill">
-                            <div class="chart-bar-progress" style="width: ${highPriority * 10}%">${highPriority}</div>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>🔴 Alta</span>
+                            <strong>${highPriority}</strong>
+                        </div>
+                        <div style="background: var(--bg-primary); border-radius: 8px; height: 30px; overflow: hidden;">
+                            <div style="background: var(--danger); height: 100%; width: ${Math.min(highPriority * 10, 100)}%; transition: width 1s;"></div>
                         </div>
                     </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">🟡 Media</div>
-                        <div class="chart-bar-fill">
-                            <div class="chart-bar-progress" style="width: ${mediumPriority * 10}%">${mediumPriority}</div>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>🟡 Media</span>
+                            <strong>${mediumPriority}</strong>
+                        </div>
+                        <div style="background: var(--bg-primary); border-radius: 8px; height: 30px; overflow: hidden;">
+                            <div style="background: var(--warning); height: 100%; width: ${Math.min(mediumPriority * 10, 100)}%; transition: width 1s;"></div>
                         </div>
                     </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">🟢 Baja</div>
-                        <div class="chart-bar-fill">
-                            <div class="chart-bar-progress" style="width: ${lowPriority * 10}%">${lowPriority}</div>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>🟢 Baja</span>
+                            <strong>${lowPriority}</strong>
+                        </div>
+                        <div style="background: var(--bg-primary); border-radius: 8px; height: 30px; overflow: hidden;">
+                            <div style="background: var(--success); height: 100%; width: ${Math.min(lowPriority * 10, 100)}%; transition: width 1s;"></div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="chart-container">
-                    <h3 style="margin-bottom: 20px;">📈 Resumen Semanal</h3>
-                    <div style="font-size: 18px; color: var(--text-secondary);">
-                        Esta semana tienes <strong style="color: var(--primary); font-size: 32px;">${weekTasks}</strong> tareas programadas
-                    </div>
+                <div style="margin-top: 30px; padding: 30px; background: var(--bg-tertiary); border-radius: 16px; text-align: center;">
+                    <h3 style="margin-bottom: 15px;">🎯 Tasa de Completado</h3>
+                    <div style="font-size: 72px; font-weight: bold; color: var(--primary);">${completionRate}%</div>
+                    <p style="color: var(--text-secondary); margin-top: 10px;">
+                        ${completionRate >= 80 ? '¡Excelente trabajo! 🎉' : 
+                          completionRate >= 50 ? '¡Buen progreso! 💪' : 
+                          '¡Sigue así! 🚀'}
+                    </p>
                 </div>
             `;
         }
@@ -1401,15 +1713,27 @@
                             <div style="font-weight: bold; margin-bottom: 5px;">🔓 Permisos de Notificación</div>
                             <div style="font-size: 13px; color: var(--text-secondary);">
                                 Estado: ${Notification.permission === 'granted' ? '✅ Activadas' : 
-                                         Notification.permission === 'denied' ? '❌ Bloqueadas' : 
-                                         '⚠️ Pendiente'}
+                                         Notification.permission === 'denied' ? '❌ Bloqueadas (Reactiva en configuración del navegador)' : 
+                                         '⚠️ Pendiente - Click para activar'}
                             </div>
                         </div>
                         <button class="btn btn-small btn-primary">Verificar</button>
                     </div>
                 </div>
                 
-                <div style="margin-top: 40px; padding: 20px; background: var(--bg-tertiary); border-radius: 16px; border: 1px solid var(--border);">
+                <div style="margin-top: 40px; padding: 25px; background: var(--bg-tertiary); border-radius: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin-bottom: 15px;">ℹ️ Información del Sistema</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
+                        • Checker de recordatorios: <strong style="color: var(--success);">Activo (cada 10 seg)</strong><br>
+                        • Notificaciones exactas: <strong style="color: var(--success);">Activadas</strong><br>
+                        • Recordatorios inteligentes: <strong style="color: var(--success);">Filtrado automático</strong><br>
+                        • Tareas guardadas: <strong>${tasks.length}</strong><br>
+                        • Hábitos activos: <strong>${habits.length}</strong><br>
+                        • Clases programadas: <strong>${classes.length}</strong>
+                    </p>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 20px; background: var(--bg-tertiary); border-radius: 16px; border: 1px solid var(--border);">
                     <h3 style="margin-bottom: 15px;">📊 Datos</h3>
                     <button class="btn btn-danger" onclick="clearAllData()">🗑️ Borrar Todos los Datos</button>
                 </div>
@@ -1431,7 +1755,7 @@
                     <div class="task-meta">
                         ${task.time ? `<span class="task-tag">🕐 ${task.time}</span>` : ''}
                         ${task.date ? `<span class="task-tag">📅 ${task.date}</span>` : ''}
-                        ${task.reminders && task.reminders.length > 0 ? `<span class="task-tag">🔔 ${task.reminders.length}</span>` : ''}
+                        ${task.reminders && task.reminders.length > 0 ? `<span class="task-tag">🔔 ${task.reminders.length} recordatorios</span>` : ''}
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 15px;">
                         <button class="btn btn-small btn-secondary" onclick="editTask('${task.id}')">✏️</button>
@@ -1480,6 +1804,7 @@
             });
             
             reminders = task.reminders || [];
+            updateReminderOptions();
             renderReminders();
             
             document.getElementById('taskModal').classList.add('show');
@@ -1500,6 +1825,7 @@
                 btn.classList.toggle('active', btn.dataset.priority === 'none');
             });
             
+            updateReminderOptions();
             document.getElementById('taskModal').classList.add('show');
         }
         
@@ -1518,16 +1844,20 @@
             if (!minutes) return;
             const select = document.getElementById('reminderSelect');
             const option = select.options[select.selectedIndex];
-            reminders.push({ minutes: parseInt(minutes), label: option.text });
+            
+            const minutesInt = parseInt(minutes);
+            reminders.push({ minutes: minutesInt, label: option.text });
             renderReminders();
             select.value = '';
+            
+            showToast(`✅ Recordatorio agregado: ${option.text}`);
         }
         
         function renderReminders() {
             const container = document.getElementById('remindersContainer');
             container.innerHTML = reminders.map((r, i) => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 8px;">
-                    <span>${r.label}</span>
+                    <span>🔔 ${r.label}</span>
                     <button type="button" class="btn btn-danger btn-small" onclick="removeReminder(${i})">×</button>
                 </div>
             `).join('');
@@ -1536,6 +1866,7 @@
         function removeReminder(index) {
             reminders.splice(index, 1);
             renderReminders();
+            showToast('🗑️ Recordatorio eliminado');
         }
         
         function saveTask(event) {
@@ -1561,20 +1892,19 @@
             } else {
                 tasks.push(task);
                 showToast('✅ Tarea creada');
+                
+                // Notificar inmediatamente de la nueva tarea
+                if (task.date && task.time) {
+                    showNotification(
+                        '📝 Nueva tarea creada',
+                        `${task.title} - ${task.date} ${task.time}`
+                    );
+                }
             }
             
             saveData();
             closeModal();
             render();
-            scheduleReminders(task);
-            
-            // Notificar inmediatamente de la nueva tarea
-            if (!editingTaskId && task.date && task.time) {
-                showNotification(
-                    '📝 Nueva tarea creada',
-                    `${task.title} - ${task.date} ${task.time}`
-                );
-            }
         }
         
         function toggleTheme() {
@@ -1601,14 +1931,12 @@
         }
         
         function clearAllData() {
-            if (confirm('¿Estás seguro? Se borrarán TODAS tus tareas y configuraciones.')) {
-                localStorage.clear();
-                location.reload();
+            if (confirm('¿Estás seguro? Se borrarán TODAS tus tareas, hábitos, clases y configuraciones.')) {
+                if (confirm('¿REALMENTE seguro? Esta acción NO se puede deshacer.')) {
+                    localStorage.clear();
+                    location.reload();
+                }
             }
-        }
-        
-        function openVoiceModal() {
-            alert('🎤 Reconocimiento de voz disponible en la versión completa');
         }
         
         function goToToday() {
