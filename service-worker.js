@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ticktick-ultra-v3';
+const CACHE_NAME = 'ticktick-ultra-v4-supabase';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -51,7 +51,7 @@ self.addEventListener('fetch', event => {
           console.log('📦 Sirviendo desde cache:', event.request.url);
           return response;
         }
-        
+
         // Si no hay cache, intentar red
         return fetch(event.request)
           .then(response => {
@@ -59,18 +59,18 @@ self.addEventListener('fetch', event => {
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
-            
+
             const responseToCache = response.clone();
             caches.open(CACHE_NAME).then(cache => {
               cache.put(event.request, responseToCache);
             });
-            
+
             return response;
           })
           .catch(() => {
             // Si falla la red y no hay cache, devolver respuesta vacía
             console.log('❌ Sin red ni cache para:', event.request.url);
-            return new Response('Offline', { 
+            return new Response('Offline', {
               status: 503,
               statusText: 'Service Unavailable'
             });
@@ -82,9 +82,9 @@ self.addEventListener('fetch', event => {
 // PUSH NOTIFICATIONS
 self.addEventListener('push', event => {
   console.log('📬 Push notification recibida');
-  
+
   let data = { title: 'TickTick Ultra PRO', body: 'Tienes una nueva notificación' };
-  
+
   if (event.data) {
     try {
       data = event.data.json();
@@ -92,7 +92,7 @@ self.addEventListener('push', event => {
       data.body = event.data.text();
     }
   }
-  
+
   const options = {
     body: data.body || 'Tienes una nueva notificación',
     icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="45" fill="%236366f1"/%3E%3Cpath d="M30 50 L45 65 L70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E',
