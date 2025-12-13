@@ -1,0 +1,81 @@
+    <!-- PAYMENT MODAL -->
+    <div id='paymentModal' class='modal'>
+        <div class='modal-content'>
+            <h2 id='modalTitle' class='modal-header'>Nuevo Pago</h2>
+            <form id='paymentForm' onsubmit='savePayment(event)'>
+                <div class='form-group'>
+                    <label class='form-label'>Tipo de Servicio</label>
+                    <select id='serviceType' class='form-select' required>
+                        <option value=''>Selecciona...</option>
+                        <option value='Mezcla'>Mezcla</option>
+                        <option value='Master'>Master</option>
+                        <option value='Mezcla + Master'>Mezcla + Master</option>
+                        <option value='Beat'>Beat</option>
+                        <option value='Producción'>Producción</option>
+                        <option value='Otro'>Otro</option>
+                    </select>
+                </div>
+                <div class='form-group'>
+                    <label class='form-label'>Cliente</label>
+                    <input type='text' id='clientName' class='form-input' placeholder='Nombre del cliente' required>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>Método de Pago</label>
+                        <select id='paymentMethod' class='form-select' onchange='handlePaymentMethodChange()' required>
+                            <option value=''>Selecciona...</option>
+                            <option value='paypal'>PayPal (6.6%)</option>
+                            <option value='payhip'>Payhip (6.6%)</option>
+                            <option value='offszn'>offszn (6.6%)</option>
+                            <option value='western union'>Western Union (0%)</option>
+                            <option value='yape'>Yape (0%)</option>
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Moneda</label>
+                        <select id='currency' class='form-select' onchange='handlePaymentMethodChange()' required>
+                            <option value='USD'>USD ($)</option>
+                            <option value='PEN'>PEN (S/.)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>Monto Bruto</label>
+                        <input type='number' id='grossAmount' class='form-input' step='0.01' placeholder='0.00' oninput='updateNetAmountPreview()' required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Monto Neto</label>
+                        <div style='padding: 14px; background: var(--bg-tertiary); border: 2px solid var(--border); border-radius: 12px; font-size: 18px; font-weight: 600; color: var(--success);'>
+                            <span id='netAmountPreview'>.00</span>
+                        </div>
+                        <small id='commissionInfo' style='display: none; color: var(--danger); margin-top: 4px;'></small>
+                    </div>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>Estado</label>
+                        <select id='paymentStatus' class='form-select' required>
+                            <option value='pagado'>Pagado</option>
+                            <option value='sin_pagar'>Sin Pagar</option>
+                            <option value='mitad_pagado'>Mitad Pagado</option>
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Fecha de Pago</label>
+                        <input type='date' id='paymentDate' class='form-input' required>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='form-label'>Notas (Opcional)</label>
+                    <textarea id='paymentNotes' class='form-textarea' placeholder='Detalles adicionales...'></textarea>
+                </div>
+                <div style='display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;'>
+                    <button type='button' class='btn btn-secondary' onclick='closePaymentModal()'>Cancelar</button>
+                    <button type='submit' class='btn btn-primary'>Guardar Pago</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
