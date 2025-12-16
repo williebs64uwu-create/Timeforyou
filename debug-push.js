@@ -134,7 +134,7 @@ async function checkLatestTask() {
 function addDebugButton() {
     // Container
     const container = document.createElement('div');
-    container.style.cssText = 'position: fixed; top: 100px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; opacity: 0.8;';
+    container.style.cssText = 'position: fixed; top: 100px; left: 20px; z-index: 9999; display: none; flex-direction: column; gap: 10px; opacity: 0.8;';
 
     // Push Button
     const btnPush = document.createElement('button');
