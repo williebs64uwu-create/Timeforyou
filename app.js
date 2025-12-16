@@ -631,7 +631,8 @@ window.onload = function () {
 
     loadData();
     setMinDate();
-    render();
+    // Restore last view
+    changeView(currentView);
     applyTheme();
 
     // Solicitar permisos de notificación
@@ -2458,8 +2459,12 @@ function toggleRepeatDay(day) {
 }
 
 function closeInputModal() {
-    document.getElementById('inputModal').classList.remove('show');
-    document.getElementById('inputModalForm').reset();
+    const modal = document.getElementById('inputModal');
+    modal.classList.remove('show');
+    // Ensure form is reset after UI update
+    setTimeout(() => {
+        document.getElementById('inputModalForm').reset();
+    }, 50);
 }
 
 // ===================================
@@ -2488,7 +2493,8 @@ function openConfirmModal(title, text, onConfirm) {
 function closeConfirmModal() {
     const modal = document.getElementById('confirmModal');
     modal.classList.remove('show');
-    setTimeout(() => modal.style.display = 'none', 300);
+    // Instant close
+    modal.style.display = 'none';
 }
 window.closeConfirmModal = closeConfirmModal; // Asegurar visibilidad global
 
