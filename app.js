@@ -261,6 +261,56 @@ function checkAllReminders() {
     if (notificationsTriggered > 0) {
         log(`✅ ${notificationsTriggered} notificaciones enviadas`);
     }
+
+    // ===================================
+    // NUEVO: NOTIFICACIONES DE HORARIO / CLASES
+    // ===================================
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const currentDayName = days[now.getDay()];
+
+    classes.forEach(cls => {
+        if (cls.day !== currentDayName || !cls.startTime) return;
+
+        // Resetear flag si no es el momento (para permitir notificar la próxima semana o día, 
+        // aunque idealmente esto se resetea al recargar o cambiar de día)
+        // Por simplicidad en MVP: Usamos flag en memoria cls.hasNotifiedToday
+
+        const [hours, minutes] = cls.startTime.split(':');
+        const classDate = new Date();
+        classDate.setHours(hours, minutes, 0, 0);
+
+        // LÓGICA DE ANTICIPACIÓN
+        // Por defecto: Notificar a la hora exacta (0 min antes)
+        // Para "Inglés": Notificar 20 min antes
+        let alertDate = new Date(classDate);
+        let timeOffsetMsg = '';
+
+        if (cls.subject.toLowerCase().includes('english') || cls.subject.toLowerCase().includes('inglés')) {
+            alertDate.setMinutes(alertDate.getMinutes() - 20);
+            timeOffsetMsg = ' (En 20 min)';
+        }
+
+        const diffMs = alertDate - now;
+        const diffSeconds = Math.floor(diffMs / 1000);
+
+        // Ventana de notificación (±30 segundos)
+        if (diffSeconds >= -30 && diffSeconds <= 30) {
+            if (!cls.hasNotifiedToday) {
+                log(`🎓 ALERT: "${cls.subject}" notification trigger`);
+
+                showPersistentNotification(
+                    `🔔 Prepárate: ${cls.subject}${timeOffsetMsg}`,
+                    `Tu bloque de ${cls.startTime} comienza pronto.`,
+                    `class-${cls.id}`
+                );
+
+                cls.hasNotifiedToday = true;
+            }
+        } else {
+            // Reset si estamos lejos (> 5 min)
+            if (Math.abs(diffSeconds) > 300) cls.hasNotifiedToday = false;
+        }
+    });
 }
 
 // NOTIFICACIÓN PERSISTENTE
@@ -616,6 +666,11 @@ function initAuth() {
             log('👤 Usuario conectado:', currentUser.email);
             updateUserProfileUI(currentUser);
             syncData();
+
+            // 🔔 Suscribir a Push Notifications
+            if (typeof initPushNotifications === 'function') {
+                initPushNotifications();
+            }
         } else {
             // Redirect to landing if trying to access dashboard without auth
             if (window.location.pathname.includes('dashboard.html')) {
@@ -632,7 +687,14 @@ function initAuth() {
             currentUser = session.user;
             updateUserProfileUI(currentUser);
             // Si es un login nuevo, syncData se activará
-            if (event === 'SIGNED_IN') syncData();
+            if (event === 'SIGNED_IN') {
+                syncData();
+
+                // 🔔 Suscribir a Push Notifications
+                if (typeof initPushNotifications === 'function') {
+                    initPushNotifications();
+                }
+            }
         } else {
             currentUser = null;
             log('👤 Usuario desconectado');
@@ -1288,87 +1350,218 @@ function render() {
 // VISTA SEMANAL (Columnas Lun-Dom)
 // ===================================
 
+// TOAST SYSTEM PROFESSIONAL
+function showToast(message, type = 'info') {
+    // ... existing toast code (omitted for brevity, assume unchanged or handle if needed) ... 
+    // Actually replace_file_content replaces the BLOCK. I need to be careful not to delete showToast if it was overlapping or context.
+    // Wait, toggleHabit is far from renderWeek. I should do TWO edits.
+    // One for toggleHabit, One for renderWeek.
+    // This tool call is for renderWeek mostly.
+    // But `toggleHabit` is separate. I will split the edits.
+}
+
 function renderWeek(content) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const today = new Date();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Lunes
+    const dayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
+    startOfWeek.setDate(today.getDate() - dayIndex);
 
     let html = `
         <div style="margin-bottom: 20px;">
-            <h2>Vista Semanal</h2>
-            <p style="color: var(--text-secondary); font-size: 14px;">Semana del ${startOfWeek.toLocaleDateString()}</p>
+            <h2>Vista General (Semana)</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">Toda tu vida en un vistazo.</p>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+        <!-- RESPONSIVE CONTAINER: Horizontal scroll on mobile, Grid on Desktop -->
+        <style>
+            .kanban-container {
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+                gap: 15px;
+            }
+            @media (max-width: 768px) {
+                .kanban-container {
+                    display: flex;
+                    overflow-x: auto;
+                    scroll-snap-type: x mandatory;
+                    padding-bottom: 20px;
+                    gap: 12px;
+                }
+                .kanban-container .content-card {
+                    min-width: 260px; /* Ancho fijo para móvil */
+                    scroll-snap-align: start;
+                }
+            }
+        </style>
+        <div class="kanban-container">
     `;
 
-    days.forEach((day, index) => {
+    days.forEach((dayName, index) => {
         const dayDate = new Date(startOfWeek);
         dayDate.setDate(startOfWeek.getDate() + index);
         const dateStr = dayDate.toISOString().split('T')[0];
+        const isToday = dateStr === today.toISOString().split('T')[0];
 
+        // 1. BOOKINGS
         const dayBookings = bookings.filter(b => {
             if (!b.start_datetime) return false;
             return b.start_datetime.startsWith(dateStr);
+        }).map(b => ({ ...b, type: 'booking', sortTime: b.start_datetime.split('T')[1] }));
+
+        // 2. TASKS
+        const dayTasks = tasks.filter(t => t.date === dateStr && !t.completed)
+            .map(t => ({ ...t, type: 'task', sortTime: t.time || '23:59' }));
+
+        // 3. CLASSES / ROUTINE
+        const dayClasses = classes.filter(c => c.day === dayName)
+            .map(c => ({ ...c, type: 'class', sortTime: c.startTime || '00:00' }));
+
+        // 4. HABITS (Daily)
+        const dayHabits = habits.map(h => {
+            let time = '00:00';
+            // Fix specific known habits without explicit numbers
+            if (h.title.toLowerCase().includes('reflex')) {
+                time = '22:30';
+            } else {
+                const timeMatch = h.title.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM|am|pm)?/);
+                if (timeMatch) {
+                    let hours = parseInt(timeMatch[1]);
+                    const minutes = timeMatch[2] || '00';
+                    const modifier = timeMatch[3]?.toUpperCase();
+
+                    if (modifier === 'PM' && hours < 12) hours += 12;
+                    if (modifier === 'AM' && hours === 12) hours = 0;
+
+                    time = `${hours.toString().padStart(2, '0')}:${minutes}`;
+                }
+            }
+            // Check completion for THIS specific date
+            const isCompleted = (h.completed_dates || []).includes(dateStr);
+
+            return { ...h, type: 'habit', sortTime: time, isCompleted, dateContext: dateStr };
         });
 
-        const dayTasks = tasks.filter(t => t.date === dateStr && !t.completed)
-            .sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99'));
-
-        const isToday = dateStr === today.toISOString().split('T')[0];
+        // COMBINE & SORT
+        // Filter out completed habits if specific setting? No, user wants to see everything "Todo absolutamente todo".
+        // But maybe show completed dimmed.
+        const mixedItems = [...dayBookings, ...dayTasks, ...dayClasses, ...dayHabits]
+            .sort((a, b) => a.sortTime.localeCompare(b.sortTime));
 
         html += `
-            <div class="content-card" style="padding: 12px; ${isToday ? 'border: 2px solid var(--primary);' : ''}">
-                <div style="font-weight: 600; margin-bottom: 8px; color: ${isToday ? 'var(--primary)' : 'var(--text-primary)'};">
-                    ${day.substring(0, 3).toUpperCase()}
+            <div class="content-card" style="padding: 0; overflow: hidden; height: fit-content; ${isToday ? 'border: 2px solid var(--primary);' : 'border: 1px solid var(--border);'}">
+                <div style="padding: 12px; background: ${isToday ? 'var(--primary-light-alpha)' : 'var(--bg-tertiary)'}; border-bottom: 1px solid var(--border);">
+                    <div style="font-weight: 700; color: ${isToday ? 'var(--primary)' : 'var(--text-primary)'}; display: flex; justify-content: space-between;">
+                        <span>${dayName.toUpperCase()}</span>
+                        <span>${dayDate.getDate()}</span>
+                    </div>
                 </div>
-                <div style="font-size: 24px; font-weight: bold; margin-bottom: 12px; color: var(--text-secondary);">
-                    ${dayDate.getDate()}
-                </div>
+                <div style="padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 100px;">
         `;
 
-        if (dayTasks.length === 0 && dayBookings.length === 0) {
-            html += `<div style="color: var(--text-secondary); font-size: 12px; text-align: center; padding: 20px 0;">Sin actividad</div>`;
+        if (mixedItems.length === 0) {
+            html += `<div style="color: var(--text-secondary); font-size: 12px; text-align: center; padding: 20px 0; opacity: 0.5;">Nada programado</div>`;
         } else {
-            // 1. Render Bookings First
-            if (dayBookings.length > 0) {
-                dayBookings.forEach(booking => {
+            // Separar completados de pendientes
+            const pendingItems = mixedItems.filter(item => item.type !== 'habit' || !item.isCompleted);
+            const completedHabits = mixedItems.filter(item => item.type === 'habit' && item.isCompleted);
+
+            // RENDERIZAR ITEMS PENDIENTES
+            pendingItems.forEach(item => {
+                if (item.type === 'booking') {
                     html += `
-                        <div class="task-card" onclick="openBookingDetailsModal('${booking.id}')" style="margin-bottom: 6px; padding: 8px; border-left: 3px solid var(--accent); background: var(--bg-tertiary); cursor: pointer;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="font-size: 10px; color: var(--accent);"><i class="ri-user-star-line"></i></div>
+                        <div onclick="openBookingDetailsModal('${item.id}')" style="padding: 8px; border-left: 3px solid var(--accent); background: var(--bg-primary); cursor: pointer; border-radius: 4px; font-size: 12px;">
+                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                <i class="ri-user-star-line" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600;">${item.guest_name}</span>
+                            </div>
+                            <div style="color: var(--text-secondary);">⏰ ${item.sortTime.substring(0, 5)}</div>
+                        </div>
+                    `;
+                } else if (item.type === 'class') {
+                    // COLOR CODING
+                    let color = '#a855f7';
+                    let icon = '🎓';
+
+                    const subUpper = item.subject.toUpperCase();
+                    if (subUpper.includes('ENGLISH') || subUpper.includes('INGLÉS')) {
+                        color = '#3b82f6';
+                        icon = '🇺🇸';
+                    } else if (subUpper.includes('DEEP WORK') || subUpper.includes('OFFSZN')) {
+                        color = '#10b981';
+                        icon = '🚀';
+                    } else if (subUpper.includes('EDICIÓN')) {
+                        color = '#f43f5e';
+                        icon = '🎥';
+                    }
+
+                    html += `
+                        <div style="padding: 8px; border-left: 3px solid ${color}; background: var(--bg-primary); border-radius: 4px; font-size: 12px;">
+                            <div style="font-weight: 700; margin-bottom: 4px; color: ${color}; display: flex; gap: 6px; align-items: center;">
+                                <span>${icon}</span> ${item.subject}
+                            </div>
+                            <div style="color: var(--text-secondary);">⏰ ${item.startTime} - ${item.endTime}</div>
+                            ${item.room ? `<div style="color: var(--text-secondary); font-size: 11px;">📍 ${item.room}</div>` : ''}
+                        </div>
+                    `;
+                } else if (item.type === 'task') {
+                    html += `
+                        <div onclick="openTaskModal(${item.id})" style="padding: 8px; border-left: 3px solid var(--text-secondary); background: var(--bg-primary); border-radius: 4px; font-size: 12px; cursor: pointer;">
+                            <div style="display: flex; gap: 6px;">
+                                <div class="checkbox" onclick="event.stopPropagation(); toggleTask(${item.id})" style="width: 14px; height: 14px;"></div>
                                 <div style="flex: 1;">
-                                    <div style="font-size: 12px; font-weight: 600;">${booking.guest_name}</div>
-                                    <div style="font-size: 10px; color: var(--text-secondary);">
-                                        ${booking.start_datetime ? booking.start_datetime.split('T')[1].substring(0, 5) : (booking.time || '00:00')}
-                                    </div>
+                                    <div style="font-weight: 500;">${item.title}</div>
+                                    ${item.time ? `<div style="color: var(--text-secondary); margin-top: 2px;">⏰ ${item.time}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.type === 'habit') {
+                    html += `
+                        <div style="padding: 8px; border-left: 3px solid #eab308; background: var(--bg-primary); border-radius: 4px; font-size: 12px;">
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="checkbox" 
+                                     onclick="event.stopPropagation(); toggleHabit('${item.id}', '${item.dateContext}')" 
+                                     style="border-color: #eab308;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">${item.title}</div>
+                                    ${item.sortTime !== '00:00' ? `<div style="color: var(--text-secondary); font-size: 10px;">⏰ ${item.sortTime}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // SECCIÓN DE COMPLETADOS (solo hábitos)
+            if (completedHabits.length > 0) {
+                html += `
+                    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--border);">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">✅ COMPLETADOS</div>
+                `;
+
+                completedHabits.forEach(item => {
+                    html += `
+                        <div style="padding: 6px; border-left: 3px solid var(--text-disabled); background: var(--bg-secondary); border-radius: 4px; font-size: 11px; opacity: 0.7; margin-bottom: 4px;">
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="checkbox checked" 
+                                     onclick="event.stopPropagation(); toggleHabit('${item.id}', '${item.dateContext}')" 
+                                     style="min-width: 14px; width: 14px; height: 14px; border: 2px solid #10b981; background: #10b981; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                     <i class="ri-check-line" style="font-size:10px; color: white;"></i>
+                                </div>
+                                <div style="flex: 1; text-decoration: line-through; color: var(--text-secondary);">
+                                    ${item.title}
                                 </div>
                             </div>
                         </div>
                     `;
                 });
-            }
 
-            // 2. Render Tasks
-            dayTasks.forEach(task => {
-                html += `
-                    <div class="task-card" style="margin-bottom: 6px; padding: 8px;" onclick="openTaskModal(${task.id})">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div class="checkbox ${task.completed ? 'checked' : ''}" 
-                                 onclick="event.stopPropagation(); toggleTask(${task.id})">
-                                ${task.completed ? '<i class="ri-check-line" style="font-size:10px;"></i>' : ''}
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="font-size: 12px; ${task.completed ? 'text-decoration: line-through;' : ''}">${task.title}</div>
-                                ${task.time ? `<div style="font-size: 10px; color: var(--text-secondary);">${task.time}</div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+                html += `</div>`;
+            }
         }
 
-        html += `</div>`;
+        html += `</div></div>`;
     });
 
     html += `</div>`;
@@ -2218,25 +2411,30 @@ function openInputModal(title, prefillDate = '', prefillTime = '', onSubmit = nu
             date: newDate,
             time: newTime,
             completed: false,
-            user_id: currentUser.id,
-            xp: XP_TABLE.TASK
+            user_id: currentUser.id
+            // xp: XP_TABLE.TASK  <-- REMOVED: This column does not exist in DB
         };
 
         // UI Optimistic
         const tempId = Date.now();
         tasks.push({ ...newTask, id: tempId });
-        render();
+        render(); // Re-render first
+
         closeInputModal();
         showToast('Tarea creada con AI', 'success');
-        playAlertSound(); // beep
+        playAlertSound();
 
         // DB Insert
         const { data, error } = await window.supabaseClient.from('tasks').insert([newTask]).select();
-        if (data) {
+
+        if (error) {
+            console.error('❌ Error saving AI task:', error);
+            showToast('Error guardando en nube', 'error');
+        } else if (data) {
             const idx = tasks.findIndex(t => t.id === tempId);
             if (idx !== -1) tasks[idx] = data[0];
             render();
-            gainXP(XP_TABLE.TASK);
+            gainXP(XP_TABLE.TASK); // ✅ Award XP separately after success
         }
     };
 }
@@ -2596,24 +2794,26 @@ function promptNewHabit() {
     });
 }
 
-async function toggleHabit(id) {
+async function toggleHabit(id, dateOverride = null) {
     const habit = habits.find(h => h.id === id);
     if (!habit) return;
 
-    const todayStr = formatDate(new Date());
-    let dates = habit.completed_dates || []; // Usar snake_case para DB, pero mi app usa camelCase? 
-    // Supabase devuelve snake_case por defecto si no se mapea. 
-    // En syncData no hice mapeo, asi que `habits` tendrá snake_case `completed_dates`.
-    // Ajustemos: `habit.completed_dates || habit.completedDates` por si acaso.
+    const targetDateStr = dateOverride || formatDate(new Date());
+    let dates = habit.completed_dates || [];
 
-    // Mejor estandarizar a snake_case en el local array si Supabase es la fuente.
-    // Pero el renderHabits usa `completedDates` (camel).
-    // Voy a forzar camelCase en el frontend para consistencia.
-    // O mejor: guardar snake_case en DB y usarlo.
+    const wasCompleted = dates.includes(targetDateStr);
 
-    if (dates.includes(todayStr)) return;
+    if (wasCompleted) {
+        // Uncheck
+        dates = dates.filter(d => d !== targetDateStr);
+    } else {
+        // Check
+        dates.push(targetDateStr);
+    }
 
-    dates.push(todayStr);
+    // Actualizar local
+    habit.completed_dates = dates;
+    render(); // Re-render immediate
 
     if (currentUser) {
         const { error } = await window.supabaseClient
@@ -2621,10 +2821,20 @@ async function toggleHabit(id) {
             .update({ completed_dates: dates })
             .eq('id', id);
 
-        if (error) logError(error);
-        else {
-            // Silent habit completion
-            gainXP(XP_TABLE.HABIT, 'Hábito completado');
+        if (error) {
+            logError(error);
+            showToast('❌ Error al guardar', 'error');
+        } else {
+            if (!wasCompleted) {
+                // Completado
+                const habitName = habit.title.split(' ')[0];
+                showToast(`✅ ${habitName} completado!`, 'success');
+                gainXP(XP_TABLE.HABIT, 'Hábito completado');
+            } else {
+                // Desmarcado
+                const habitName = habit.title.split(' ')[0];
+                showToast(`↩️ ${habitName} desmarcado`, 'info');
+            }
         }
     }
 }
@@ -3319,7 +3529,7 @@ async function saveTask(event) {
         // ⚡ SUPABASE SAVE
         const { user_id } = currentUser; // Auth ya provee el ID
 
-        // Preparar objeto para Supabase (Snake Case si es necesario, pero definimos tablas con mismos nombres mayormente)
+        // Preparar objeto para Supabase
         const payload = {
             user_id: currentUser.id,
             title: task.title,
@@ -3327,11 +3537,12 @@ async function saveTask(event) {
             date: task.date,
             time: task.time,
             priority: task.priority,
-            reminders: task.reminders,
-            attachment: task.attachment, // Nueva columna (JSONB idealmente)
+            reminders: task.reminders, // Check this!
+            attachment: task.attachment,
             repeat_days: selectedRepeatDays.length > 0 ? selectedRepeatDays : null,
             completed: false
         };
+
 
         if (editingTaskId) {
             // UPDATE

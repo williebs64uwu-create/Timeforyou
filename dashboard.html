@@ -65,7 +65,7 @@
                 <line x1="12" y1="14" x2="12" y2="14.01" />
                 <line x1="16" y1="14" x2="16" y2="14.01" />
             </svg>
-            Semana
+            Vista General
         </div>
 
         <div class="menu-item" onclick="changeView('month')">Mes</div>
@@ -610,11 +610,15 @@
     <script src="revenue_ui.js"></script>
     <script src="revenue_modal.js"></script>
 
+    <!-- SEED SCHEDULE (Utility) -->
+    <script src="seed_schedule.js"></script>
+
     <!-- SERVICE WORKER -->
     <script>
         if ('serviceWorker' in navigator) {
-            // Service Worker desactivado en demo mode
-            console.log('⚠️ Service Worker desactivado en demo mode');
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('✅ SW Registrado', reg))
+                .catch(err => console.log('❌ SW Error', err));
         }
     </script>
 </body>
