@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerrar Sesión - Time For You</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <h1>Cerrando sesión...</h1>
+
+    <script>
+        // Configurar Supabase
+        const supabaseUrl = 'https://csqvjwvdjzjuvwddewoy.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXZqd3ZkanpqdXZ3ZGRld295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTA4MzIsImV4cCI6MjA4MDc4NjgzMn0.p5g8ESzDJ-aAlq3nSoRX8qS2nBsM9xrK3Et3wWEXmlw';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Cerrar sesión y redirigir
+        supabase.auth.signOut().then(() => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+
+</html>

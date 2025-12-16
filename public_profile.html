@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Público | Time For You</title>
+    <!-- Remix Icon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* PUBLIC PROFILE PREMIUM STYLES */
+        :root {
+            --bg-dark: #0f0f0f;
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-gold: #D4AF37;
+            --accent-glow: rgba(212, 175, 55, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            /* Rich abstract background */
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(100, 100, 255, 0.05) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px 20px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Animated Grain/Noise Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Glassmorphism Card for Header */
+        .profile-header {
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .avatar-container {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 24px;
+            padding: 4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-gold), transparent);
+            box-shadow: 0 0 30px var(--accent-glow);
+            /* Fix for square images */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #1a1a1a;
+            background-color: #1a1a1a;
+            /* Background behind image */
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #ccc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-role-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            color: var(--accent-gold);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        /* ACTIONS & ANIMATIONS */
+        .action-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            text-align: center;
+            margin: 10px 0 5px;
+        }
+
+        /* Premium Buttons (Apple Style) */
+        .public-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 18px 24px;
+            background: rgba(30, 30, 30, 0.4);
+            /* More transparent initially */
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            /* Smoother timing */
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .public-card:hover {
+            transform: translateY(-1px);
+            /* More subtle movement */
+            background: rgba(50, 50, 50, 0.6);
+            border-color: rgba(255, 255, 255, 0.15);
+            /* Soft glow instead of heavy shadow */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .public-card i {
+            margin-right: 12px;
+            font-size: 18px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+        .public-card:hover i {
+            color: #fff;
+        }
+
+        /* Primary CTA - FORCE GOLD */
+        .cta-primary {
+            background: linear-gradient(135deg, #D4AF37, #AA8A26) !important;
+            color: #000 !important;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+        }
+
+        .cta-primary:hover {
+            transform: scale(1.01);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.35);
+            filter: brightness(1.1);
+        }
+
+        .cta-primary i {
+            color: #000 !important;
+        }
+
+        /* Socials */
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            text-decoration: none;
+            color: #ccc;
+            font-size: 20px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transform: translateY(-3px);
+        }
+
+        /* SECTION HEADERS */
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            margin: 30px 0 15px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* CALENDAR COMPONENT STYLES */
+        .calendar-wrapper {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-month-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .calendar-nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .calendar-day-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            padding-bottom: 10px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .calendar-day:hover:not(.empty):not(.disabled) {
+            background: rgba(59, 130, 246, 0.15);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .calendar-day.empty {
+            cursor: default;
+            background: transparent;
+        }
+
+        .calendar-day.disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+            background: transparent;
+        }
+
+        /* Responsive Split Layout (Calendar left, Slots right) */
+        @media (min-width: 600px) {
+            .booking-split-view {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .calendar-section {
+                flex: 3;
+            }
+
+            .slots-section {
+                flex: 2;
+                margin-top: 0 !important;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* MOBILE RESPONSIVE OPTIMIZATIONS */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px 12px;
+                /* Reduce outer padding */
+            }
+
+            .profile-header {
+                padding: 30px 20px;
+                border-radius: 24px;
+            }
+
+            .avatar-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 16px;
+            }
+
+            .profile-name {
+                font-size: 24px;
+            }
+
+            .public-card {
+                padding: 16px 20px;
+                /* Slimmer cards */
+            }
+
+            .cta-primary {
+                font-size: 15px;
+            }
+
+            /* Modal Mobile */
+            #bookingModal .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 20px;
+                max-height: 90vh;
+                /* Ensure it fits height */
+            }
+
+            .calendar-grid {
+                gap: 4px;
+                /* Tighter grid */
+            }
+
+            .calendar-day {
+                font-size: 14px;
+                /* Clearer dates */
+                border-radius: 8px;
+                /* Softer touch targets */
+            }
+
+            .slots-section {
+                margin-top: 15px !important;
+            }
+
+            /* Stack buttons nicely if needed */
+            .duration-btn {
+                min-width: 70px;
+                flex: 1;
+                /* Stretch to fill */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loadingState" class="profile-container" style="display: flex;">
+        <div class="skeleton" style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px;"></div>
+        <div class="skeleton" style="width: 200px; height: 32px; margin: 0 auto 10px;"></div>
+        <div class="skeleton" style="width: 100px; height: 24px; margin: 0 auto 20px;"></div>
+        <div class="skeleton" style="width: 100%; height: 60px; margin-bottom: 12px;"></div>
+        <div class="skeleton" style="width: 100%; height: 60px;"></div>
+    </div>
+
+    <div id="profileContent" class="profile-container" style="display: none;">
+
+        <!-- HEADER -->
+        <header class="profile-header">
+            <div class="avatar-container">
+                <img src="" alt="Avatar" id="pAvatar" class="avatar-img">
+            </div>
+            <h1 id="pName" class="profile-name">Cargando...</h1>
+            <span id="pRole" class="profile-role">Creator</span>
+            <p id="pBio" class="profile-bio">...</p>
+        </header>
+
+        <!-- BOOKING SECTION -->
+        <div class="action-section" id="actionButtonContainer">
+            <button onclick="openBookingModal()" class="public-card cta-primary" style="justify-content: center;">
+                <i class="ri-calendar-event-fill"></i> Reservar Clase / Asesoría
+            </button>
+        </div>
+
+        <!-- LINKS SECTION -->
+        <h3 class="section-title">Enlaces</h3>
+        <div id="linksContainer" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Links will be injected here -->
+        </div>
+
+        <!-- SOCIAL FOOTER -->
+        <div class="social-grid" id="socialGrid">
+            <!-- Social Icons injected here -->
+        </div>
+
+        <footer style="margin-top: 40px; text-align: center; color: var(--text-tertiary); font-size: 12px;">
+            <p>Powered by <strong>Time For You</strong></p>
+        </footer>
+    </div>
+
+    <!-- BOOKING MODAL (Reusing styles from main app mostly, but simplified) -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Solicitar Reserva
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label class="form-label">Tu Nombre</label>
+                    <input type="text" name="guest_name" class="form-input" required placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email de Contacto</label>
+                    <input type="email" name="guest_email" class="form-input" required placeholder="juan@email.com">
+                </div>
+                <div class="booking-split-view">
+                    <!-- CALENDAR SECTION -->
+                    <div class="calendar-section">
+                        <label class="form-label" style="margin-bottom:10px; display:block;">Fecha</label>
+                        <input type="hidden" name="date" id="selectedDateInput" required>
+                        <div class="calendar-wrapper">
+                            <div class="calendar-header">
+                                <button type="button" class="calendar-nav-btn" id="prevMonth"><i
+                                        class="ri-arrow-left-s-line"></i></button>
+                                <span class="calendar-month-title" id="calendarTitle">Octubre 2023</span>
+                                <button type="button" class="calendar-nav-btn" id="nextMonth"><i
+                                        class="ri-arrow-right-s-line"></i></button>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Days injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SLOTS SECTION -->
+                    <div class="slots-section" style="margin-top: 20px;">
+                        <!-- Duration Selection -->
+                        <div style="margin-bottom: 15px;">
+                            <label class="form-label">Duración</label>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="duration-btn active" data-duration="30"
+                                    onclick="selectDuration(this, 30)" style="cursor: default; pointer-events: none;">
+                                    30 min
+                                </button>
+                                <!-- 1 hora option removed as per user request -->
+                            </div>
+                            <input type="hidden" name="duration" id="selectedDuration" value="30">
+                        </div>
+
+                        <label class="form-label">Horarios</label>
+                        <input type="hidden" name="time" id="selectedTimeInput" required>
+
+                        <div id="slotsContainer"
+                            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 320px; overflow-y: auto; padding: 8px;">
+                            <div
+                                style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); font-size: 13px; padding: 20px;">
+                                Selecciona un día
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    /* Duration Buttons */
+                    .duration-btn {
+                        flex: 0 1 auto;
+                        min-width: 85px;
+                        max-width: 120px;
+                        background: var(--bg-primary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 8px 12px;
+                        font-size: 13px;
+                        color: var(--text-secondary);
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        font-family: inherit;
+                    }
+
+                    .duration-btn:hover {
+                        border-color: var(--primary);
+                        background: rgba(59, 130, 246, 0.08);
+                    }
+
+                    .duration-btn.active {
+                        background: var(--primary);
+                        border-color: var(--primary);
+                        color: white;
+                        font-weight: 600;
+                    }
+
+                    /* Time Slots */
+                    .time-slot {
+                        background: var(--bg-primary);
+                        border: 1px solid rgba(255, 255, 255, 0.06);
+                        border-radius: 6px;
+                        padding: 10px 6px;
+                        text-align: center;
+                        font-size: 13px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        color: var(--text-primary);
+                        font-variant-numeric: tabular-nums;
+                    }
+
+                    .time-slot:hover:not(.disabled) {
+                        border-color: var(--primary);
+                        background: rgba(59, 130, 246, 0.1);
+                        transform: translateY(-1px);
+                    }
+
+                    .time-slot.selected {
+                        background: var(--primary);
+                        border-color: var(--primary);
+                        color: white;
+                        font-weight: 600;
+                        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+                    }
+
+                    .time-slot.disabled {
+                        opacity: 0.25;
+                        cursor: not-allowed;
+                        background: var(--bg-tertiary);
+                        text-decoration: line-through;
+                        color: var(--text-tertiary);
+                    }
+                </style>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label">Motivo</label>
+                    <textarea name="notes" class="form-textarea" placeholder="¿Sobre qué quieres hablar?"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeBookingModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Agendar Cita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUPABASE & LOGIC -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="public.js"></script>
+
+</body>
+
+</html>

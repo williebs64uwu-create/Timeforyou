@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Time For You - Tu Tiempo, Tu Productividad</title>
+    <!-- Favicon Data URI to prevent 404 -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%233B82F6%22/><path d=%22M30 50 L45 65 L70 35%22 stroke=%22white%22 stroke-width=%2210%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="toast.css">
+    <link rel="stylesheet" href="premium_modal.css">
+    <!-- Remixed Icons & Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class="ri-menu-4-line"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            Time For You
+        </div>
+
+        <div class="menu-item active" onclick="changeView('inbox')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                <path
+                    d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+            </svg>
+            Inbox
+            <span class="badge" id="inboxCount"
+                style="background: var(--primary); color: white; margin-left: auto;">0</span>
+        </div>
+
+        <div class="menu-item" onclick="changeView('today')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Hoy
+        </div>
+
+        <div class="menu-item" onclick="changeView('week')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+                <line x1="8" y1="14" x2="8" y2="14.01" />
+                <line x1="12" y1="14" x2="12" y2="14.01" />
+                <line x1="16" y1="14" x2="16" y2="14.01" />
+            </svg>
+            Vista General
+        </div>
+
+        <div class="menu-item" onclick="changeView('month')">Mes</div>
+
+        <div class="menu-item" onclick="changeView('requests')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            Solicitudes
+            <span class="badge" id="requestsCount"
+                style="background: var(--accent); color: white; margin-left: auto; display: none;">0</span>
+        </div>
+
+        <!-- NEW: Revenue Management -->
+        <div class="menu-item" onclick="changeView('revenue')">
+            <i class="ri-money-dollar-circle-line"></i>
+            <span>Ingresos</span>
+        </div>
+
+        <div class="menu-section">ESTUDIANTE</div>
+
+        <div class="menu-item" onclick="changeView('schedule')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+            Horario Clases
+        </div>
+
+        <div class="menu-item" onclick="changeView('exams')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Exámenes
+        </div>
+
+        <div class="menu-section">CREATIVIDAD & SOCIAL</div>
+
+        <div class="menu-item" onclick="changeView('music')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="18" cy="16" r="3" />
+            </svg>
+            Producción Musical
+        </div>
+
+        <div class="menu-item" onclick="changeView('social')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+            Redes Sociales
+        </div>
+
+        <div class="menu-section">PRODUCTIVIDAD</div>
+
+        <div class="menu-item" onclick="changeView('habits')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            Hábitos
+        </div>
+
+        <div class="menu-item" onclick="changeView('pomodoro')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </svg>
+            Pomodoro
+        </div>
+
+        <div class="menu-item" onclick="changeView('stats')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            Estadísticas
+        </div>
+
+        <div class="menu-section">MÁS</div>
+        <div class="menu-item" onclick="changeView('settings')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                    d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 6l4.24 4.24M23 12h-6m-6 0H1m18.66 5.66l-4.24-4.24m0-6l4.24-4.24" />
+            </svg>
+            Configuración
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title" id="viewTitle">Inbox</div>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div id="userProfile" style="display: none; align-items: center; gap: 10px;">
+                    <img id="userAvatar" src=""
+                        style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--primary);">
+                    <span id="userName" style="font-size: 14px; font-weight: bold;"></span>
+                    <button class="btn btn-secondary btn-small" onclick="logout()" title="Cerrar Sesión">
+                        <i class="ri-logout-box-r-line"></i>
+                    </button>
+                </div>
+                <button id="loginBtn" class="btn btn-primary btn-small" onclick="loginWithEmail()">
+                    Iniciar Sesión
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="goToToday()">Hoy</button>
+                <!-- Botón manual oculto para priorizar voz -->
+                <!-- <button class="btn btn-primary btn-small" onclick="openTaskModal()">+ Nueva Tarea</button> -->
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div id="mainContent"></div>
+        </div>
+    </div>
+
+    <!-- FAB Voice Centrado y Grande -->
+    <div class="fab-container"
+        style="position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; align-items: center;">
+
+        <!-- Botón Manual (Secundario) -->
+        <button onclick="openTaskModal()" style="
+            width: 48px; height: 48px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.1); color: #ccc; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        " title="Entrada Manual">
+            <i class="ri-keyboard-line" style="font-size: 22px;"></i>
+        </button>
+
+        <!-- Botón Voz (Principal) -->
+        <button id="aiMicBtn" onclick="toggleVoiceListening()" style="
+            width: 64px; height: 64px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, #2563EB 100%);
+            color: white; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: pulse-glow 3s infinite;
+        " onmouseover="this.style.transform='scale(1.1) rotate(5deg)'"
+            onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+            <i class="ri-mic-fill" style="font-size: 28px;"></i>
+        </button>
+    </div>
+
+    <!-- FAB Antiguo eliminado -->
+    <!-- <button class="fab" onclick="openTaskModal()">+</button> -->
+
+    <!-- MODAL DE TAREA -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Nueva Tarea</div>
+            <form onsubmit="saveTask(event)">
+                <div class="form-group">
+                    <label class="form-label">Título *</label>
+                    <input type="text" class="form-input" id="taskTitle" required placeholder="¿Qué necesitas hacer?">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-textarea" id="taskDesc" placeholder="Añade detalles..."></textarea>
+                </div>
+
+                <!-- NEW: File Attachment -->
+                <div class="form-group">
+                    <label class="form-label">Adjunto (Opcional)</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="file" id="taskAttachment" style="display: none;"
+                            onchange="updateFileNameDisplay()">
+                        <button type="button" class="btn btn-secondary btn-small"
+                            onclick="document.getElementById('taskAttachment').click()">
+                            <i class="ri-attachment-2"></i> Adjuntar
+                        </button>
+                        <span id="fileNameDisplay" style="font-size: 12px; color: var(--text-secondary);"></span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="taskDate" onchange="updateReminderOptions()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora</label>
+                        <input type="time" class="form-input" id="taskTime" onchange="updateReminderOptions()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Prioridad</label>
+                    <div class="priority-options">
+                        <div class="priority-btn active" data-priority="none" onclick="selectPriority('none')">
+                            <div>Sin Prioridad</div>
+                        </div>
+                        <div class="priority-btn" data-priority="low" onclick="selectPriority('low')">
+                            <div style="color: var(--success);">Baja</div>
+                        </div>
+                        <div class="priority-btn" data-priority="medium" onclick="selectPriority('medium')">
+                            <div style="color: var(--warning);">Media</div>
+                        </div>
+                        <div class="priority-btn" data-priority="high" onclick="selectPriority('high')">
+                            <div style="color: var(--danger);">Alta</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Recordatorio</label>
+                    <select class="form-input" id="reminderSelect">
+                        <option value="">Sin recordatorio</option>
+                    </select>
+                </div>
+
+                <div id="customReminderDiv" style="display: none;">
+                    <div id="remindersList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Repetir</label>
+                    <select class="form-input" id="repeatSelect" onchange="toggleRepeatOptions()">
+                        <option value="">No repetir</option>
+                        <option value="daily">Diario</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="monthly">Mensual</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+
+                <div id="repeatDaysDiv" style="display: none; margin-top: 10px;">
+                    <div class="day-buttons">
+                        <button type="button" class="day-btn" data-day="L" onclick="toggleRepeatDay('L')">L</button>
+                        <button type="button" class="day-btn" data-day="M" onclick="toggleRepeatDay('M')">M</button>
+                        <button type="button" class="day-btn" data-day="X" onclick="toggleRepeatDay('X')">X</button>
+                        <button type="button" class="day-btn" data-day="J" onclick="toggleRepeatDay('J')">J</button>
+                        <button type="button" class="day-btn" data-day="V" onclick="toggleRepeatDay('V')">V</button>
+                        <button type="button" class="day-btn" data-day="S" onclick="toggleRepeatDay('S')">S</button>
+                        <button type="button" class="day-btn" data-day="D" onclick="toggleRepeatDay('D')">D</button>
+                    </div>
+                </div>
+
+                <div class="modal-buttons" style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🔐 ADMIN SECRET KEY MODAL -->
+    <div id="adminSecretModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 style="margin-bottom: 20px; text-align: center;">🔐 Acceso Admin</h3>
+            <p style="color: var(--text-secondary); text-align: center; margin-bottom: 20px;">
+                Ingresa tu clave secreta de administrador
+            </p>
+            <form id="adminSecretForm" onsubmit="verifyAdminSecret(event)">
+                <div class="form-group">
+                    <label class="form-label">Clave Secreta</label>
+                    <input type="password" id="adminSecretInput" class="form-input" placeholder="Tu clave secreta"
+                        required>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="logout()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Verificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 50px; margin-bottom: 20px; color: var(--primary);">
+                <i class="ri-flashlight-fill"></i>
+            </div>
+            <h2 style="margin-bottom: 10px;">Login Rápido</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">Sincroniza tus tareas en todos tus
+                dispositivos.</p>
+
+            <form onsubmit="handleLoginSubmit(event)">
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label class="form-label">Tu Email</label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="nombre@ejemplo.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary" class="btn-full">Enviarme enlace
+                    mágico</button>
+            </form>
+            <button class="btn btn-secondary" onclick="closeLoginModal()"
+                style="width: 100%; margin-top: 10px;">Cancelar</button>
+        </div>
+    </div>
+    <!-- Generic Input Modal -->
+    <div id="inputModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <h2 id="inputModalTitle" style="margin-bottom: 20px;">Nuevo Item</h2>
+            <form id="inputModalForm">
+                <div id="inputModalFields">
+                    <!-- Dynamic Fields -->
+                </div>
+                <div class="modal-buttons" style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeInputModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <h3 id="confirmModalTitle" style="margin-bottom: 10px;">¿Estás seguro?</h3>
+            <p id="confirmModalText" style="color: var(--text-secondary); margin-bottom: 20px;">Esta acción no
+                se puede
+                deshacer.</p>
+            <div class="modal-buttons" style="display: flex; gap: 10px; justify-content: center;">
+                <button id="confirmBtn" class="btn btn-danger" style="min-width: 100px;">Eliminar</button>
+                <button class="btn btn-secondary" onclick="closeConfirmModal()"
+                    style="min-width: 100px;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Voice Button -->
+    <button id="aiMicBtn" onclick="toggleVoice()" style="
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border: 2px solid rgba(255,255,255,0.2);
+        color: white;
+        font-size: 28px;
+        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.5);
+        cursor: pointer;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    " onmouseover="this.style.transform='scale(1.1) rotate(5deg)'"
+        onmouseout="this.style.transform='scale(1) rotate(0deg)'">
+        <i class="ri-mic-fill" style="font-size: 24px;"></i>
+    </button>
+
+    <!-- Listening Overlay -->
+    <div id="listeningOverlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    ">
+        <div style="font-size: 60px; margin-bottom: 20px; color: var(--primary); animation: pulse 1.5s infinite;">
+            <i class="ri-mic-2-fill"></i>
+        </div>
+        <h2 style="margin-bottom: 10px;">Te escucho...</h2>
+        <div id="listeningText"
+            style="font-size: 24px; font-weight: 500; margin: 20px 0; min-height: 40px; text-align: center; padding: 0 20px;">
+            ...</div>
+        <p style="color: #ccc;">Di algo como: "Examen de Matemáticas mañana a las 10"</p>
+        <button onclick="toggleVoice()" class="btn btn-secondary" style="margin-top: 30px;">Cancelar</button>
+    </div>
+
+    <!-- 🔥 SUPABASE SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // ✅ SUPABASE ACTIVADO
+        const supabaseUrl = 'https://csqvjwvdjzjuvwddewoy.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXZqd3ZkanpqdXZ3ZGRld295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTA4MzIsImV4cCI6MjA4MDc4NjgzMn0.p5g8ESzDJ-aAlq3nSoRX8qS2nBsM9xrK3Et3wWEXmlw'
+
+        // Inicializar
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey)
+        window.supabaseClient = _supabase
+        console.log('✅ Supabase inicializado correctamente');
+    </script>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer"></div>
+
+    <!-- CUSTOM MODAL SYSTEM -->
+    <!-- Alert Modal -->
+    <div id="customAlertModal" class="custom-modal">
+        <div class="custom-modal-backdrop"></div>
+        <div class="custom-modal-content alert-modal">
+            <div class="modal-icon">
+                <i id="alertIcon" class="ri-information-line"></i>
+            </div>
+            <h3 id="alertTitle" class="modal-title">Notificación</h3>
+            <p id="alertMessage" class="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="closeCustomAlert()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="customConfirmModal" class="custom-modal">
+        <div class="custom-modal-backdrop"></div>
+        <div class="custom-modal-content confirm-modal">
+            <div class="modal-icon warning">
+                <i class="ri-question-line"></i>
+            </div>
+            <h3 id="confirmTitle" class="modal-title">Confirmar acción</h3>
+            <p id="confirmMessage" class="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeCustomConfirm(false)">Cancelar</button>
+                <button class="btn btn-primary" onclick="closeCustomConfirm(true)">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Modal -->
+    <div id="customPromptModal" class="custom-modal">
+        <div class="custom-modal-backdrop"></div>
+        <div class="custom-modal-content prompt-modal">
+            <div class="modal-icon">
+                <i class="ri-edit-line"></i>
+            </div>
+            <h3 id="promptTitle" class="modal-title">Ingresa información</h3>
+            <p id="promptMessage" class="modal-message"></p>
+            <input type="text" id="promptInput" class="form-input" placeholder="">
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeCustomPrompt(null)">Cancelar</button>
+                <button class="btn btn-primary" onclick="closeCustomPrompt('submit')">Aceptar</button>
+            </div>
+        </div>
+    </div> <!-- PAYMENT MODAL -->
+    <div id='paymentModal' class='modal'>
+        <div class='modal-content'>
+            <h2 id='modalTitle' class='modal-header'>Nuevo Pago</h2>
+            <form id='paymentForm' onsubmit='savePayment(event)'>
+                <div class='form-group'>
+                    <label class='form-label'>Tipo de Servicio</label>
+                    <select id='serviceType' class='form-select' required>
+                        <option value=''>Selecciona...</option>
+                        <option value='Mezcla'>Mezcla</option>
+                        <option value='Master'>Master</option>
+                        <option value='Mezcla + Master'>Mezcla + Master</option>
+                        <option value='Beat'>Beat</option>
+                        <option value='Producci�n'>Producci�n</option>
+                        <option value='Otro'>Otro</option>
+                    </select>
+                </div>
+                <div class='form-group'>
+                    <label class='form-label'>Cliente</label>
+                    <input type='text' id='clientName' class='form-input' placeholder='Nombre del cliente' required>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>M�todo de Pago</label>
+                        <select id='paymentMethod' class='form-select' onchange='updateNetAmountPreview()' required>
+                            <option value=''>Selecciona...</option>
+                            <option value='paypal'>PayPal (6.6%)</option>
+                            <option value='payhip'>Payhip (6.6%)</option>
+                            <option value='offszn'>offszn (6.6%)</option>
+                            <option value='western union'>Western Union (0%)</option>
+                            <option value='yape'>Yape (0%)</option>
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Moneda</label>
+                        <select id='currency' class='form-select' onchange='updateNetAmountPreview()' required>
+                            <option value='USD'>USD ($)</option>
+                            <option value='PEN'>PEN (S/.)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>Monto Bruto</label>
+                        <input type='number' id='grossAmount' class='form-input' step='0.01' placeholder='0.00'
+                            oninput='updateNetAmountPreview()' required>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Monto Neto</label>
+                        <div
+                            style='padding: 14px; background: var(--bg-tertiary); border: 2px solid var(--border); border-radius: 12px; font-size: 18px; font-weight: 600; color: var(--success);'>
+                            <span id='netAmountPreview'>.00</span>
+                        </div>
+                        <small id='commissionInfo'
+                            style='display: none; color: var(--danger); margin-top: 4px;'></small>
+                    </div>
+                </div>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 15px;'>
+                    <div class='form-group'>
+                        <label class='form-label'>Estado</label>
+                        <select id='paymentStatus' class='form-select' required>
+                            <option value='pagado'>Pagado</option>
+                            <option value='en_curso'>En Curso</option>
+                            <option value='pagado100'>Pagado 100</option>
+                            <option value='pendiente'>Pendiente</option>
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label class='form-label'>Fecha de Pago</label>
+                        <input type='date' id='paymentDate' class='form-input' required>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='form-label'>Notas (Opcional)</label>
+                    <textarea id='paymentNotes' class='form-textarea' placeholder='Detalles adicionales...'></textarea>
+                </div>
+                <div style='display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;'>
+                    <button type='button' class='btn btn-secondary' onclick='closePaymentModal()'>Cancelar</button>
+                    <button type='submit' class='btn btn-primary'>Guardar Pago</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- PUSH NOTIFICATIONS -->
+    <script src="push-subscription.js"></script>
+
+    <!-- DEBUG PUSH (TEMPORAL) -->
+    <script src="debug-push.js"></script>
+
+    <!-- TU APP -->
+    <script src="app.js?v=2"></script>
+
+    <!-- 🧠 AI ASSISTANT -->
+    <script src="ai_assistant.js"></script>
+
+    <!-- REVENUE MANAGEMENT -->
+    <script src="revenue_logic.js"></script>
+    <script src="revenue_ui.js"></script>
+    <script src="revenue_modal.js"></script>
+
+    <!-- SEED SCHEDULE (Utility) -->
+    <script src="seed_schedule.js"></script>
+
+    <!-- SERVICE WORKER -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('✅ SW Registrado', reg))
+                .catch(err => console.log('❌ SW Error', err));
+        }
+    </script>
+</body>
+
+</html>

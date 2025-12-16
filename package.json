@@ -1,0 +1,27 @@
+{
+    "name": "timeforyou-push-backend",
+    "version": "1.0.0",
+    "description": "Backend service for sending push notifications",
+    "main": "backend/push-sender.js",
+    "scripts": {
+        "start": "node backend/push-sender.js",
+        "dev": "nodemon backend/push-sender.js"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "dependencies": {
+        "web-push": "^3.6.7",
+        "@supabase/supabase-js": "^2.39.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    },
+    "keywords": [
+        "push-notifications",
+        "pwa",
+        "supabase"
+    ],
+    "author": "Willie",
+    "license": "MIT"
+}
