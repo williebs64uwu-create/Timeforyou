@@ -166,9 +166,44 @@ function addDebugButton() {
     };
     styleBtn(btnCheck, '#007bff');
 
+    // Verify Key
+    const btnKey = document.createElement('button');
+    btnKey.textContent = '🔑 VER LLAVE PÚBLICA';
+    btnKey.onclick = () => {
+        alert('Llave actual en Frontend:\n' + VAPID_PUBLIC_KEY.substring(0, 15) + '...');
+    };
+    styleBtn(btnKey, '#6c757d');
+
+    // Wipe All
+    const btnWipe = document.createElement('button');
+    btnWipe.textContent = '🧹 BORRAR TODO (RESET)';
+    btnWipe.onclick = async () => {
+        if (!confirm('¿Borrar TODAS las suscripciones y empezar de cero?')) return;
+        try {
+            const { error } = await window.supabaseClient
+                .from('push_subscriptions')
+                .delete()
+                .eq('user_id', currentUser.id);
+
+            if (error) throw error;
+
+            // Unsubscribe local sdk
+            const reg = await navigator.serviceWorker.getRegistration();
+            const sub = await reg.pushManager.getSubscription();
+            if (sub) await sub.unsubscribe();
+
+            alert('✅ TODO BORRADO. Ahora dale a "TEST SUSCRIPCIÓN" para registrarte limpio.');
+        } catch (e) {
+            alert(e.message);
+        }
+    };
+    styleBtn(btnWipe, '#dc3545');
+
     container.appendChild(btnDB);
     container.appendChild(btnPush);
     container.appendChild(btnCheck);
+    container.appendChild(btnKey);
+    container.appendChild(btnWipe);
     document.body.appendChild(container);
 
     console.log('✅ Botones de debug agregados');
