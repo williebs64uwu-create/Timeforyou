@@ -407,8 +407,14 @@ async function initCalendar() {
         document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
         el.classList.add('selected');
 
-        // Logic
-        const dateStr = dateObj.toISOString().split('T')[0];
+        // Logic - Construct YYYY-MM-DD manually to avoid UTC shifts
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+
+        console.log('📅 Date selected:', dateStr);
+
         dateInput.value = dateStr;
         timeInput.value = ''; // Reset time
 
@@ -418,6 +424,7 @@ async function initCalendar() {
         // Load Slots
         try {
             const blocked = await checkAvailability(dateStr);
+            console.log('🚫 Blocked slots for', dateStr, ':', blocked);
             renderSlots(blocked);
         } catch (err) {
             console.error(err);
@@ -449,6 +456,9 @@ async function initCalendar() {
             if (blockedSlots.includes(time)) {
                 div.classList.add('disabled');
                 div.title = 'No disponible';
+                div.style.opacity = '0.5';
+                div.style.cursor = 'not-allowed';
+                div.style.background = 'var(--bg-tertiary)';
             } else {
                 div.onclick = () => {
                     document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
@@ -468,17 +478,24 @@ async function initCalendar() {
 async function checkAvailability(dateStr) {
     if (!currentProfileId) return [];
 
+    console.log('🔍 Checking availability for:', dateStr, 'Host:', currentProfileId);
+
     // Fetch Bookings for this Host on this Date
     // Status: confirmed OR pending (blocked to avoid double booking)
     const { data, error } = await window.supabaseClient
         .from('bookings')
-        .select('start_datetime, end_datetime') // Fetch end_time to calc duration
+        .select('start_datetime, end_datetime, status') // Fetch status for debug
         .eq('host_id', currentProfileId)
-        .or('status.eq.confirmed,status.eq.pending')
-        .filter('start_datetime', 'gte', `${dateStr}T00:00:00`)
-        .filter('start_datetime', 'lte', `${dateStr}T23:59:59`);
+        .or('status.eq.confirmed,status.eq.pending') // Filter accepted statuses
+        .gte('start_datetime', `${dateStr}T00:00:00`)
+        .lte('start_datetime', `${dateStr}T23:59:59`);
 
-    if (error) throw error;
+    if (error) {
+        console.error('❌ Error fetching availability:', error);
+        throw error;
+    }
+
+    console.log('✅ Bookings found:', data);
 
     // Extract all blocked 30-min slots
     const blockedSlots = [];

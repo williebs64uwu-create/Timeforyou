@@ -1,0 +1,23 @@
+# Render Blueprint for Push Notification Backend
+# This file tells Render how to deploy your backend automatically
+
+services:
+  - type: web
+    name: timeforyou-push-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: VAPID_PUBLIC_KEY
+        value: BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LJgDd53EvJJusaykNdLGPJxQxJWZPB0RYPJzYU7T8diz1c
+      - key: VAPID_PRIVATE_KEY
+        sync: false  # Will be set manually in Render dashboard
+      - key: VAPID_EMAIL
+        value: mailto:williebeatsyt@gmail.com
+      - key: SUPABASE_URL
+        value: https://csqvjwvdjzjuvwddewooy.supabase.co
+      - key: SUPABASE_SERVICE_KEY
+        sync: false  # Will be set manually in Render dashboard
+    healthCheckPath: /
+    autoDeploy: true

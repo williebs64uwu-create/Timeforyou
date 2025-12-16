@@ -526,13 +526,10 @@
                             <label class="form-label">Duración</label>
                             <div style="display: flex; gap: 8px;">
                                 <button type="button" class="duration-btn active" data-duration="30"
-                                    onclick="selectDuration(this, 30)">
+                                    onclick="selectDuration(this, 30)" style="cursor: default; pointer-events: none;">
                                     30 min
                                 </button>
-                                <button type="button" class="duration-btn" data-duration="60"
-                                    onclick="selectDuration(this, 60)">
-                                    1 hora
-                                </button>
+                                <!-- 1 hora option removed as per user request -->
                             </div>
                             <input type="hidden" name="duration" id="selectedDuration" value="30">
                         </div>

@@ -272,18 +272,6 @@ async function sendPushToUser(userId, payload) {
 // START THE SERVICE
 // =====================================================
 console.log('🚀 Starting Push Notification Service...');
-
-// DEBUG: RECOVERY - Generate new keys
-try {
-    const newKeys = webpush.generateVAPIDKeys();
-    console.log('\n🔑 --- NUEVAS LLAVES GENERADAS (COPIAR ESTO) ---');
-    console.log('Public Key:', newKeys.publicKey);
-    console.log('Private Key:', newKeys.privateKey);
-    console.log('--- FIN LLAVES ---\n');
-} catch (e) {
-    console.error('Error generando llaves:', e);
-}
-
 console.log('⏰ Checking every 60 seconds');
 
 // Run immediately on start
