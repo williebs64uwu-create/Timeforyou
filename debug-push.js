@@ -57,10 +57,17 @@ async function testPushSubscription() {
         return;
     }
 
-    // 6. Intentar suscripción
-    console.log('4️⃣ Intentando suscribir...');
+    // 6. Intentar suscripción (FORZAR RENOVACIÓN)
+    console.log('4️⃣ Intentando suscribir (Renovando llaves)...');
 
     try {
+        const reg = await navigator.serviceWorker.getRegistration();
+        const existingSub = await reg.pushManager.getSubscription();
+        if (existingSub) {
+            console.log('🗑️ Eliminando suscripción antigua para actualizar llaves...');
+            await existingSub.unsubscribe();
+        }
+
         const result = await subscribeToPushNotifications();
 
         if (result) {
