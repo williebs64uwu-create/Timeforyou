@@ -1141,30 +1141,50 @@ async function loadData() {
         const [
             tasksData,
             habitsData,
-            classesData,
+            routineData, // Changed from classesData
             bookingsData,
             examsData,
             projectsData
         ] = await Promise.all([
             window.supabaseClient.from('tasks').select('*').eq('user_id', currentUser.id),
             window.supabaseClient.from('habits').select('*').eq('user_id', currentUser.id),
-            window.supabaseClient.from('classes').select('*').eq('user_id', currentUser.id),
-            window.supabaseClient.from('bookings').select('*'), // Filtered by RLS usually
+            // DEBUG: Fetch ALL routine items (ignoring user_id) since RLS is disabled
+            window.supabaseClient.from('weekly_routine').select('*'),
+            window.supabaseClient.from('bookings').select('*').eq('user_id', currentUser.id),
             window.supabaseClient.from('exams').select('*').eq('user_id', currentUser.id),
             window.supabaseClient.from('projects').select('*').eq('user_id', currentUser.id)
         ]);
 
-        // 3. Process Results
-        if (tasksData.data) tasks = tasksData.data;
-        if (habitsData.data) habits = habitsData.data;
-        if (classesData.data) classes = classesData.data;
-        if (bookingsData.data) bookings = bookingsData.data;
-        if (examsData.data) exams = examsData.data;
-        if (projectsData.data) projects = projectsData.data;
+        if (tasksData.error) throw tasksData.error;
+        if (habitsData.error) throw habitsData.error;
+        if (routineData.error) throw routineData.error;
+        if (bookingsData.error) throw bookingsData.error;
+        if (examsData.error) throw examsData.error;
+        if (projectsData.error) throw projectsData.error;
 
-        log(`✅ Data Loaded in ${(performance.now() - startTime).toFixed(2)}ms`);
+        // Update Local State
+        tasks = tasksData.data || [];
+        habits = habitsData.data || [];
+        classes = (routineData.data || []).map(r => ({
+            ...r,
+            startTime: r.start_time,
+            endTime: r.end_time,
+            subject: r.activity,
+            day: r.day,
+            completed_dates: r.completed_dates || []
+        }));
 
-        // 4. Render
+        bookings = bookingsData.data || [];
+        exams = examsData.data || [];
+        projects = projectsData.data || [];
+        // Setup Realtime (Subscription)
+        setupRealtimeSubscription();
+
+        log(`✅ Data Loaded: ${tasks.length} tasks, ${habits.length} habits, ${classes.length} routine items`);
+
+        // DEBUG: Notify user of loaded routine items
+        showToast(`Cargados ${classes.length} items de rutina`, classes.length > 0 ? 'success' : 'warning');
+
         render();
         updateLevelUI();
 
@@ -1368,9 +1388,11 @@ function renderWeek(content) {
     const dayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
     startOfWeek.setDate(today.getDate() - dayIndex);
 
+    const authStatus = currentUser ? `✅ USER: ${currentUser.email}` : '❌ GUEST MODE';
+
     let html = `
         <div style="margin-bottom: 20px;">
-            <h2>Vista General (Semana)</h2>
+            <h2>Vista General (Semana) <span style="font-size: 12px; color: yellow;">(DEBUG: ${authStatus} | ${classes.length} items)</span></h2>
             <p style="color: var(--text-secondary); font-size: 14px;">Toda tu vida en un vistazo.</p>
         </div>
         <!-- RESPONSIVE CONTAINER: Horizontal scroll on mobile, Grid on Desktop -->
@@ -1397,6 +1419,18 @@ function renderWeek(content) {
         <div class="kanban-container">
     `;
 
+    // EMERGENCY DEBUG: Hardcoded fallback item
+    const debugItems = [...classes];
+    /*
+    debugItems.push({
+        id: 'debug-1', 
+        day: 'Lunes', 
+        subject: 'TEST ITEM (Si ves esto, el render funciona)', 
+        startTime: '00:00', endTime: '01:00', 
+        type: 'class'
+    });
+    */
+
     days.forEach((dayName, index) => {
         const dayDate = new Date(startOfWeek);
         dayDate.setDate(startOfWeek.getDate() + index);
@@ -1413,9 +1447,13 @@ function renderWeek(content) {
         const dayTasks = tasks.filter(t => t.date === dateStr && !t.completed)
             .map(t => ({ ...t, type: 'task', sortTime: t.time || '23:59' }));
 
-        // 3. CLASSES / ROUTINE
-        const dayClasses = classes.filter(c => c.day === dayName)
-            .map(c => ({ ...c, type: 'class', sortTime: c.startTime || '00:00' }));
+        // 3. CLASSES / ROUTINE (Loose Matching)
+        const dayClasses = debugItems.filter(c => {
+            // Normalize strings (trim + ignore case)
+            const d1 = (c.day || '').trim().toLowerCase();
+            const d2 = dayName.trim().toLowerCase();
+            return d1 === d2;
+        }).map(c => ({ ...c, type: 'class', sortTime: c.startTime || '00:00' }));
 
         // 4. HABITS (Daily)
         const dayHabits = habits.map(h => {
@@ -1479,29 +1517,22 @@ function renderWeek(content) {
                         </div>
                     `;
                 } else if (item.type === 'class') {
-                    // COLOR CODING
-                    let color = '#a855f7';
-                    let icon = '🎓';
-
-                    const subUpper = item.subject.toUpperCase();
-                    if (subUpper.includes('ENGLISH') || subUpper.includes('INGLÉS')) {
-                        color = '#3b82f6';
-                        icon = '🇺🇸';
-                    } else if (subUpper.includes('DEEP WORK') || subUpper.includes('OFFSZN')) {
-                        color = '#10b981';
-                        icon = '🚀';
-                    } else if (subUpper.includes('EDICIÓN')) {
-                        color = '#f43f5e';
-                        icon = '🎥';
-                    }
+                    // RENDER AS SIMPLE TASK (User request: "Como Tareas")
+                    const isCompleted = (item.completed_dates || []).includes(dateStr);
 
                     html += `
-                        <div style="padding: 8px; border-left: 3px solid ${color}; background: var(--bg-primary); border-radius: 4px; font-size: 12px;">
-                            <div style="font-weight: 700; margin-bottom: 4px; color: ${color}; display: flex; gap: 6px; align-items: center;">
-                                <span>${icon}</span> ${item.subject}
+                        <div style="padding: 8px; border: 1px solid var(--border); background: var(--bg-primary); border-radius: 4px; font-size: 12px; margin-bottom: 4px; cursor: pointer;"
+                             onclick="toggleClassCompletion('${item.id}', '${dateStr}')">
+                            <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                <div class="checkbox ${isCompleted ? 'checked' : ''}" 
+                                     style="width: 16px; height: 16px; margin-top: 2px; border-color: var(--accent);">
+                                    ${isCompleted ? '✓' : ''}
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: var(--text-primary); ${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${item.subject}</div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">⏰ ${item.startTime} - ${item.endTime}</div>
+                                </div>
                             </div>
-                            <div style="color: var(--text-secondary);">⏰ ${item.startTime} - ${item.endTime}</div>
-                            ${item.room ? `<div style="color: var(--text-secondary); font-size: 11px;">📍 ${item.room}</div>` : ''}
                         </div>
                     `;
                 } else if (item.type === 'task') {
@@ -2506,8 +2537,10 @@ window.closeConfirmModal = closeConfirmModal; // Asegurar visibilidad global
 // CLASS / SCHEDULE LOGIC
 // ===================================
 
-async function toggleClassCompletion(classId) {
+async function toggleClassCompletion(classId, dateOverride = null) {
     const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const targetDate = dateOverride || todayStr;
+
     const classItem = classes.find(c => c.id === classId);
 
     if (!classItem) return;
@@ -2515,15 +2548,15 @@ async function toggleClassCompletion(classId) {
     // Initialize completed_dates if missing
     if (!classItem.completed_dates) classItem.completed_dates = [];
 
-    const isCompleted = classItem.completed_dates.includes(todayStr);
+    const isCompleted = classItem.completed_dates.includes(targetDate);
     let newCompletedDates;
 
     if (isCompleted) {
         // Uncheck
-        newCompletedDates = classItem.completed_dates.filter(d => d !== todayStr);
+        newCompletedDates = classItem.completed_dates.filter(d => d !== targetDate);
     } else {
         // Check
-        newCompletedDates = [...classItem.completed_dates, todayStr];
+        newCompletedDates = [...classItem.completed_dates, targetDate];
     }
 
     // Update Local State (Optimistic)
@@ -2541,13 +2574,12 @@ async function toggleClassCompletion(classId) {
     if (currentUser) {
         const { error } = await window.supabaseClient
             .from('classes')
-            .update({ completed_dates: newCompletedDates }) // Assuming column exists
+            .update({ completed_dates: newCompletedDates })
             .eq('id', classId);
 
         if (error) {
             console.error('Error toggling class:', error);
-            // Fallback: If error is strictly about missing column, ignoring might be safe for demo, but better to warn.
-            // For now, assume user will add the column or we rely on local update effectively for this session.
+            showToast('❌ Error al guardar', 'error');
         }
     } else {
         saveData(); // Local Storage
@@ -2768,7 +2800,16 @@ function renderSchedule(content) {
     `;
 
     days.forEach(day => {
-        const dayClasses = classes.filter(c => c.day === day).sort((a, b) => a.startTime.localeCompare(b.startTime));
+        // FILTER: Only show "Student" items (Academic), hide "Life Routine" items
+        const academicKeywords = ['english', 'class', 'clase', 'universidad', 'grammar', 'vocabulary', 'matemática', 'profesor', 'examen', 'study', 'programación'];
+
+        const dayClasses = classes.filter(c => {
+            if (c.day !== day) return false;
+            // Check if subject contains any academic keyword
+            const subjectLower = c.subject.toLowerCase();
+            return academicKeywords.some(keyword => subjectLower.includes(keyword));
+        }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+
         if (dayClasses.length > 0) {
             html += `
                 <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 12px;">
