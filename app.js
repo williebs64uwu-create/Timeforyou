@@ -1517,16 +1517,20 @@ function renderWeek(content) {
                         </div>
                     `;
                 } else if (item.type === 'habit') {
+                    // Logic for Habit Checkbox in Week View
+                    const isCompletedContext = item.isCompleted;
+
                     html += `
-                        <div style="padding: 8px; border-left: 3px solid #eab308; background: var(--bg-primary); border-radius: 4px; font-size: 12px;">
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <div class="checkbox" 
-                                     onclick="event.stopPropagation(); toggleHabit('${item.id}', '${item.dateContext}')" 
-                                     style="border-color: #eab308;">
+                        <div style="padding: 8px; border: 1px solid var(--border); background: var(--glass-bg); border-radius: 4px; font-size: 12px; margin-bottom: 4px; cursor: pointer;"
+                             onclick="toggleHabit('${item.id}', '${item.dateContext}')">
+                            <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                <div class="checkbox ${isCompletedContext ? 'checked' : ''}" 
+                                     style="width: 16px; height: 16px; margin-top: 2px; border-color: var(--accent);">
+                                    ${isCompletedContext ? '✓' : ''}
                                 </div>
                                 <div style="flex: 1;">
-                                    <div style="font-weight: 500;">${item.title}</div>
-                                    ${item.sortTime !== '00:00' ? `<div style="color: var(--text-secondary); font-size: 10px;">⏰ ${item.sortTime}</div>` : ''}
+                                    <div style="font-weight: 600; color: var(--text-primary); ${isCompletedContext ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${item.title}</div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">⏰ ${item.sortTime}</div>
                                 </div>
                             </div>
                         </div>
