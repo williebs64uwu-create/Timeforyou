@@ -195,6 +195,10 @@
             </div>
 
             <button type="submit" class="btn" id="loginBtn">Iniciar Sesión</button>
+            <div style="text-align: right; margin-top: 10px;">
+                <a href="#" id="forgotPassword"
+                    style="color: #3B82F6; text-decoration: none; font-size: 14px;">¿Olvidaste tu contraseña?</a>
+            </div>
         </form>
 
         <div class="divider">o</div>
@@ -210,12 +214,15 @@
         // Configurar Supabase
         const supabaseUrl = 'https://csqvjwvdjzjuvwddewoy.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXZqd3ZkanpqdXZ3ZGRld295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMTA4MzIsImV4cCI6MjA4MDc4NjgzMn0.p5g8ESzDJ-aAlq3nSoRX8qS2nBsM9xrK3Et3wWEXmlw';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Fix: Rename to supabaseClient to avoid conflict with global 'supabase' object from CDN
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         const loginForm = document.getElementById('loginForm');
         const registerBtn = document.getElementById('registerBtn');
         const errorMsg = document.getElementById('errorMsg');
         const successMsg = document.getElementById('successMsg');
+        const forgotPasswordLink = document.getElementById('forgotPassword');
 
         // Login
         loginForm.addEventListener('submit', async (e) => {
@@ -227,9 +234,10 @@
             loginBtn.disabled = true;
             loginBtn.textContent = 'Iniciando...';
             errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email,
                     password
                 });
@@ -247,6 +255,40 @@
                 errorMsg.style.display = 'block';
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Iniciar Sesión';
+            }
+        });
+
+        // Forgot Password Handler
+        forgotPasswordLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+
+            if (!email) {
+                errorMsg.textContent = 'Por favor ingresa tu correo electrónico primero para restablecer la contraseña.';
+                errorMsg.style.display = 'block';
+                document.getElementById('email').focus();
+                return;
+            }
+
+            const originalText = e.target.textContent;
+            e.target.textContent = 'Enviando...';
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            try {
+                const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/update-password.html',
+                });
+
+                if (error) throw error;
+
+                successMsg.innerHTML = '📧 Correo enviado! Revisa tu bandeja de entrada (y spam) para restablecer tu contraseña.';
+                successMsg.style.display = 'block';
+            } catch (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                e.target.textContent = originalText;
             }
         });
 
@@ -272,7 +314,7 @@
             errorMsg.style.display = 'none';
 
             try {
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await supabaseClient.auth.signUp({
                     email,
                     password
                 });
@@ -295,14 +337,12 @@
             }
         });
 
-        // Verificar si ya está logueado (comentado para evitar auto-redirect)
-        /*
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        // Verificar si ya está logueado
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 window.location.href = 'dashboard.html';
             }
         });
-        */
 
     </script>
 </body>
